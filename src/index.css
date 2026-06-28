@@ -1,0 +1,92 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&family=Outfit:wght@100..900&family=Great+Vibes&display=swap');
+
+/* Standard CSS validator might show a warning about "@theme", but this is Tailwind CSS v4's official directive, fully processed by PostCSS */
+@theme {
+  --color-navy-light: #0a2e5c;
+  --color-navy: #021B3A;
+  --color-navy-dark: #011126;
+  --color-brandGreen-light: #33ff7a;
+  --color-brandGreen: #00C853;
+  --color-brandGreen-dark: #00963e;
+  --color-textColor: #111827;
+  --color-bgLight: #F8FAFC;
+  --font-signature: "Great Vibes", cursive;
+}
+
+@layer base {
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #F8FAFC;
+    color: #111827;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Outfit', sans-serif;
+  }
+}
+
+/* Custom styles for Hero Skyline overlay */
+.skyline-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.skyline-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(to bottom, rgba(2, 27, 58, 0.95), rgba(2, 27, 58, 0.98)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" preserveAspectRatio="none" fill="rgba(0, 200, 83, 0.03)"><path d="M0,400 L0,300 L30,300 L30,220 L50,220 L50,180 L80,180 L80,320 L100,320 L100,280 L130,280 L130,200 L160,200 L160,150 L190,150 L190,300 L210,300 L210,240 L240,240 L240,170 L270,170 L270,110 L310,110 L310,340 L330,340 L330,260 L360,260 L360,200 L390,200 L390,140 L420,140 L420,290 L450,290 L450,220 L480,220 L480,180 L510,180 L510,350 L530,350 L530,270 L560,270 L560,190 L590,190 L590,130 L630,130 L630,310 L650,310 L650,250 L680,250 L680,180 L710,180 L710,100 L750,100 L750,330 L770,330 L770,270 L800,270 L800,210 L830,210 L830,160 L860,160 L860,300 L880,300 L880,240 L910,240 L910,180 L940,180 L940,120 L980,120 L980,340 L1000,340 L1000,260 L1030,260 L1030,190 L1060,190 L1060,140 L1090,140 L1090,290 L1120,290 L1120,220 L1150,220 L1150,170 L1180,170 L1180,400 Z"/></svg>');
+  background-size: cover;
+  background-position: bottom center;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Glassmorphism custom styling for counselor card */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F8FAFC;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Custom animations for toast notifications */
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.animate-toastSlideIn {
+  animation: toastSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
