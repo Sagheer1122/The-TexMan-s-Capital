@@ -23,7 +23,8 @@ import {
   Plus,
   Filter,
   Sliders,
-  ExternalLink
+  ExternalLink,
+  Tv
 } from 'lucide-react';
 const supabase = null;
 const updateProfileRole = async (id, role) => {
@@ -137,7 +138,7 @@ export default function AdminDashboard({ onLogout, currentAdminName = "Ahmad Raz
   ];
 
   const mockRequests = [
-    { id: '1', name: 'Bilal Ahmad', resource_title: 'CFAP 1 Advanced Accounting Notes', category: 'CFAP & SCS', notes: 'Need this urgently for June attempt.', created_at: '2026-06-24T12:00:00Z' },
+    { id: '1', name: 'Bilal Ahmad', resource_title: 'CFAP 1 Advanced Accounting Notes', category: 'CFAP & SCS (Finals)', notes: 'Need this urgently for June attempt.', created_at: '2026-06-24T12:00:00Z' },
     { id: '2', name: 'Sana Malik', resource_title: 'Big 4 Interview Guide', category: 'Training/Induction', notes: 'Have an interview at PwC next week.', created_at: '2026-06-25T08:00:00Z' }
   ];
 
@@ -146,6 +147,158 @@ export default function AdminDashboard({ onLogout, currentAdminName = "Ahmad Raz
     { id: '2', title: 'CAF Intermediate Forum', category_key: 'caf', badge: 'CAF Group', description: 'WhatsApp study room for CA Intermediate students.', members_count_text: '3,200+ Members', whatsapp_link: 'https://chat.whatsapp.com/example2' },
     { id: '3', title: 'Overseas Jobs Network', category_key: 'cfap', badge: 'CFAP Group', description: 'Trainees network discussing international opportunities.', members_count_text: '800+ Members', whatsapp_link: 'https://chat.whatsapp.com/example3' }
   ];
+
+  const mockVideos = [
+    {
+      id: 'ep-1',
+      youtubeId: 'L_LUpnjgPso',
+      title: 'ICAP Firm Induction Guide 2026: QCR Rated vs Non-QCR Firms & Department Selection',
+      guest: 'Saboor Ahmad CA',
+      role: 'Founder & Lead Mentor @ The TaxMan\'s Capital',
+      desc: 'Comprehensive guidance for CA trainees on choosing audit firms, understanding QCR ratings, rotation rules, and induction preparation.',
+      duration: '42:15',
+      views: '24.5K',
+      likes: '1.8K',
+      date: 'July 2026',
+      type: 'Inductions & Guidance',
+      qualification: 'CA',
+      isFeatured: true,
+      thumbnail: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80',
+      tags: ['SaboorAhmadCA', 'ICAP', 'Induction', 'QCR', 'Articleship']
+    },
+    {
+      id: 'ep-2',
+      youtubeId: '5qap5aO4i9A',
+      title: 'A.F. Ferguson & Co. (PwC) Test Preparation & Written Test Guidelines',
+      guest: 'Saboor Ahmad CA',
+      role: 'Lead Mentor @ The TaxMan\'s Capital',
+      desc: 'Detailed breakdown of AFF induction test syllabus, English & Accounting sections, sample questions, and time management strategies.',
+      duration: '35:20',
+      views: '31.2K',
+      likes: '2.4K',
+      date: 'June 2026',
+      type: 'Inductions & Guidance',
+      qualification: 'CA',
+      isFeatured: false,
+      thumbnail: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80',
+      tags: ['AFF', 'PwC', 'TestPrep', 'SaboorAhmadCA', 'Induction']
+    },
+    {
+      id: 'ep-3',
+      youtubeId: '3JZ_D3ELwOQ',
+      title: 'How I Secured a Job in Saudi Arabia | Relocation Guide for Pakistani CAs & ACCAs',
+      guest: 'Saboor Ahmad CA',
+      role: 'Founder @ The TaxMan\'s Capital',
+      desc: 'Personal journey and step-by-step roadmap for Pakistani finance professionals to land high-paying roles in Saudi Arabia and Gulf regions.',
+      duration: '48:10',
+      views: '45.9K',
+      likes: '3.8K',
+      date: 'June 2026',
+      type: 'Career & Overseas',
+      qualification: 'Corporate / Tax',
+      isFeatured: false,
+      thumbnail: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80',
+      tags: ['SaudiArabia', 'GulfJobs', 'SaboorAhmadCA', 'Relocation', 'FCA']
+    },
+    {
+      id: 'ep-4',
+      youtubeId: '7tNs-xSft34',
+      title: 'Audit Firm Training vs Industry Training in CA Articleship (Stipends & Growth)',
+      guest: 'Saboor Ahmad CA',
+      role: 'Lead Mentor @ The TaxMan\'s Capital',
+      desc: 'Detailed comparison between 3.5 years training in Big 4 / audit firms versus ICAP approved industrial training opportunities.',
+      duration: '29:45',
+      views: '28.0K',
+      likes: '2.1K',
+      date: 'May 2026',
+      type: 'Podcasts & Interviews',
+      qualification: 'CA',
+      isFeatured: false,
+      thumbnail: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&w=800&q=80',
+      tags: ['FirmsVsIndustry', 'Articleship', 'SaboorAhmadCA', 'ICAP']
+    }
+  ];
+
+  const [videos, setVideos] = useState(() => {
+    return loadLocalStorageTable('taxman_podcasts_data', mockVideos);
+  });
+
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [videoSearch, setVideoSearch] = useState('');
+  const [videoCategoryFilter, setVideoCategoryFilter] = useState('All');
+  const [videoForm, setVideoForm] = useState({
+    title: '',
+    youtubeId: '',
+    guest: 'Saboor Ahmad CA',
+    role: 'Founder & Lead Mentor @ The TaxMan\'s Capital',
+    type: 'Inductions & Guidance',
+    duration: '30:00',
+    date: 'July 2026',
+    views: '1.5K',
+    likes: '200',
+    desc: '',
+    thumbnail: '',
+    qualification: 'CA',
+    isFeatured: false
+  });
+
+  const parseYoutubeId = (urlOrId) => {
+    if (!urlOrId) return '';
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = urlOrId.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : urlOrId.trim();
+  };
+
+  const handleSaveVideo = (e) => {
+    e?.preventDefault();
+    const yId = parseYoutubeId(videoForm.youtubeId);
+    const autoThumb = videoForm.thumbnail || (yId ? `https://img.youtube.com/vi/${yId}/hqdefault.jpg` : 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80');
+
+    let updated;
+    if (selectedVideo) {
+      updated = videos.map(v => v.id === selectedVideo.id ? { ...v, ...videoForm, youtubeId: yId, thumbnail: autoThumb } : v);
+    } else {
+      const newVideo = {
+        ...videoForm,
+        id: `ep-${Date.now()}`,
+        youtubeId: yId,
+        thumbnail: autoThumb,
+        date: videoForm.date || new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+      };
+      updated = [newVideo, ...videos];
+    }
+
+    if (videoForm.isFeatured) {
+      const activeId = selectedVideo ? selectedVideo.id : updated[0].id;
+      updated = updated.map(v => ({ ...v, isFeatured: v.id === activeId }));
+    }
+
+    setVideos(updated);
+    saveLocalStorageTable('taxman_podcasts_data', updated);
+    setIsVideoModalOpen(false);
+    setSelectedVideo(null);
+  };
+
+  const handleDeleteVideo = (id) => {
+    setConfirmModal({
+      isOpen: true,
+      title: 'Delete Video & Podcast',
+      message: 'Are you sure you want to remove this video from the public media library?',
+      onConfirm: () => {
+        const updated = videos.filter(v => v.id !== id);
+        setVideos(updated);
+        saveLocalStorageTable('taxman_podcasts_data', updated);
+        setConfirmModal({ isOpen: false, title: '', message: '', onConfirm: null });
+      }
+    });
+  };
+
+  const handleToggleFeaturedVideo = (id) => {
+    const updated = videos.map(v => ({ ...v, isFeatured: v.id === id }));
+    setVideos(updated);
+    saveLocalStorageTable('taxman_podcasts_data', updated);
+  };
 
   // Load Data from Supabase
   const loadData = async () => {
@@ -736,6 +889,7 @@ export default function AdminDashboard({ onLogout, currentAdminName = "Ahmad Raz
             { id: 'Career Support', label: 'Career Support', icon: <User className="w-4.5 h-4.5" /> },
             { id: 'Community', label: 'Community', icon: <Users className="w-4.5 h-4.5" /> },
             { id: 'Resources', label: 'Resources', icon: <Sliders className="w-4.5 h-4.5" /> },
+            { id: 'Videos & Podcasts', label: 'Videos & Podcasts', icon: <Tv className="w-4.5 h-4.5" /> },
             { id: 'Announcements', label: 'Announcements', icon: <Calendar className="w-4.5 h-4.5" /> },
             { id: 'Users List', label: 'Manage Users', icon: <Users className="w-4.5 h-4.5" /> },
             { id: 'Messages', label: 'Contact Messages', icon: <MessageSquare className="w-4.5 h-4.5" />, badge: messages.length },
@@ -1038,6 +1192,7 @@ export default function AdminDashboard({ onLogout, currentAdminName = "Ahmad Raz
                     { label: 'Post Trainee Induction', onClick: () => { setSelectedJob(null); setJobForm({ company: '', title: 'Audit Associate (Trainee)', location: 'Lahore', level: 'CA CAF Qualified', job_type: 'Articleship', deadline: '', description: '', requirements: '', is_overseas: false }); setIsJobModalOpen(true); }, color: 'bg-emerald-500/5 hover:bg-emerald-500 text-emerald-600 hover:text-white border border-emerald-500/10', desc: 'Add new CA/ACCA articleships' },
                     { label: 'Add Study Resource', onClick: () => { setSelectedResource(null); setResourceForm({ title: '', description: '', category: 'CAF', type: 'PDF', downloads: 0, tag: '', tag_color: 'bg-blue-500/10 text-blue-600', btn_color: 'bg-blue-600 hover:bg-blue-700', download_url: '', is_featured: false }); setIsResourceModalOpen(true); }, color: 'bg-blue-500/5 hover:bg-blue-500 text-blue-500 hover:text-white border border-blue-500/10', desc: 'Upload preparation PDFs & packs' },
                     { label: 'Publish Announcement', onClick: () => { setSelectedAnnouncement(null); setAnnouncementForm({ title: '', summary: '', content: '', category: 'General', event_date: '' }); setIsAnnouncementModalOpen(true); }, color: 'bg-purple-500/5 hover:bg-purple-500 text-purple-500 hover:text-white border border-purple-500/10', desc: 'Broadcast news & alerts to feed' },
+                    { label: 'Upload Video / Podcast', onClick: () => { setSelectedVideo(null); setVideoForm({ title: '', youtubeId: '', guest: 'Saboor Ahmad CA', role: 'Founder & Lead Mentor @ The TaxMan\'s Capital', type: 'Inductions & Guidance', duration: '30:00', date: 'July 2026', views: '1.5K', likes: '200', desc: '', thumbnail: '', qualification: 'CA', isFeatured: false }); setIsVideoModalOpen(true); }, color: 'bg-red-500/5 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/10', desc: 'Add latest video & podcast link' },
                     { label: 'Create Community Room', onClick: () => { setSelectedCommunity(null); setCommunityForm({ title: '', category_key: 'caf', badge: 'CAF Group', description: '', members_count_text: '1,000+ Members', whatsapp_link: '', discord_link: '' }); setIsCommunityModalOpen(true); }, color: 'bg-indigo-500/5 hover:bg-indigo-500 text-indigo-500 hover:text-white border border-indigo-500/10', desc: 'Set up WhatsApp study groups' },
                   ].map((act, idx) => (
                     <button
@@ -1636,6 +1791,171 @@ export default function AdminDashboard({ onLogout, currentAdminName = "Ahmad Raz
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {/* VIEW: VIDEOS & PODCASTS */}
+          {activeSubTab === 'Videos & Podcasts' && !loading && (
+            <div className="space-y-6 animate-fadeIn">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h1 className="text-2xl font-black text-[#090C11] flex items-center space-x-2">
+                    <Tv className="w-6 h-6 text-brandGreen" />
+                    <span>Manage Videos & Podcasts</span>
+                  </h1>
+                  <p className="text-xs text-gray-400 mt-1 font-semibold">
+                    Upload latest video & podcast links from @SaboorAhmadCA YouTube channel.
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    setSelectedVideo(null);
+                    setVideoForm({
+                      title: '',
+                      youtubeId: '',
+                      guest: 'Saboor Ahmad CA',
+                      role: 'Founder & Lead Mentor @ The TaxMan\'s Capital',
+                      type: 'Inductions & Guidance',
+                      duration: '30:00',
+                      date: 'July 2026',
+                      views: '1.5K',
+                      likes: '200',
+                      desc: '',
+                      thumbnail: '',
+                      qualification: 'CA',
+                      isFeatured: false
+                    });
+                    setIsVideoModalOpen(true);
+                  }}
+                  className="px-4 py-2.5 bg-brandGreen hover:bg-brandGreen-dark text-white font-black text-xs rounded-xl flex items-center space-x-1.5 shadow-md transition-all active:scale-95 cursor-pointer"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Upload Video / Podcast</span>
+                </button>
+              </div>
+
+              {/* Filters & Search */}
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
+                <div className="relative w-full sm:w-72">
+                  <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="Search videos, titles, guests..."
+                    value={videoSearch}
+                    onChange={(e) => setVideoSearch(e.target.value)}
+                    className="w-full bg-[#F8F9FB] border border-gray-200 rounded-xl pl-9 pr-4 py-2 text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-brandGreen"
+                  />
+                </div>
+
+                <div className="flex items-center space-x-2 w-full sm:w-auto overflow-x-auto">
+                  {['All', 'Inductions & Guidance', 'Podcasts & Interviews', 'Exam Preparation', 'Career & Overseas'].map(cat => (
+                    <button
+                      key={cat}
+                      onClick={() => setVideoCategoryFilter(cat)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-extrabold whitespace-nowrap transition-all ${
+                        videoCategoryFilter === cat
+                          ? 'bg-brandGreen text-white shadow-sm'
+                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Video List Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {videos
+                  .filter(v => {
+                    const matchesCategory = videoCategoryFilter === 'All' || v.type === videoCategoryFilter;
+                    const matchesSearch = !videoSearch || v.title.toLowerCase().includes(videoSearch.toLowerCase()) || v.guest?.toLowerCase().includes(videoSearch.toLowerCase());
+                    return matchesCategory && matchesSearch;
+                  })
+                  .map(v => (
+                    <div key={v.id} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm flex flex-col justify-between hover:shadow-md transition-all space-y-4">
+                      <div className="space-y-3">
+                        <div className="relative aspect-video rounded-xl bg-black overflow-hidden group">
+                          <img
+                            src={v.thumbnail || `https://img.youtube.com/vi/${v.youtubeId}/hqdefault.jpg`}
+                            alt={v.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                          />
+                          <div className="absolute top-2 left-2 px-2 py-0.5 bg-black/70 text-white text-[10px] font-bold rounded">
+                            {v.type}
+                          </div>
+                          <div className="absolute bottom-2 right-2 px-2 py-0.5 bg-black/80 text-emerald-400 font-mono text-[10px] font-bold rounded">
+                            {v.duration}
+                          </div>
+                          {v.isFeatured && (
+                            <div className="absolute top-2 right-2 px-2 py-0.5 bg-red-600 text-white text-[10px] font-bold rounded">
+                              SPOTLIGHT
+                            </div>
+                          )}
+                        </div>
+
+                        <div>
+                          <div className="flex items-center justify-between text-[11px] text-gray-400 font-bold mb-1">
+                            <span className="text-brandGreen">{v.guest}</span>
+                            <span>{v.date}</span>
+                          </div>
+                          <h3 className="text-sm font-black text-[#090C11] line-clamp-2 leading-tight">{v.title}</h3>
+                          <p className="text-xs text-gray-500 line-clamp-2 mt-1 leading-relaxed">{v.desc}</p>
+                          <p className="text-[10px] font-bold text-gray-400 mt-2">YouTube ID: <code className="bg-gray-100 px-1 py-0.5 rounded text-gray-700">{v.youtubeId}</code></p>
+                        </div>
+                      </div>
+
+                      <div className="pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
+                        <button
+                          onClick={() => handleToggleFeaturedVideo(v.id)}
+                          className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-colors ${
+                            v.isFeatured
+                              ? 'bg-amber-500/10 text-amber-600 border border-amber-500/30'
+                              : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                          }`}
+                        >
+                          {v.isFeatured ? 'Featured Spotlight ★' : 'Set Spotlight'}
+                        </button>
+
+                        <div className="flex items-center space-x-2">
+                          <button
+                            onClick={() => {
+                              setSelectedVideo(v);
+                              setVideoForm({
+                                title: v.title,
+                                youtubeId: v.youtubeId,
+                                guest: v.guest || 'Saboor Ahmad CA',
+                                role: v.role || 'Founder & Lead Mentor @ The TaxMan\'s Capital',
+                                type: v.type || 'Inductions & Guidance',
+                                duration: v.duration || '30:00',
+                                date: v.date || 'July 2026',
+                                views: v.views || '1.5K',
+                                likes: v.likes || '200',
+                                desc: v.desc || '',
+                                thumbnail: v.thumbnail || '',
+                                qualification: v.qualification || 'CA',
+                                isFeatured: !!v.isFeatured
+                              });
+                              setIsVideoModalOpen(true);
+                            }}
+                            className="p-2 text-gray-500 hover:text-brandGreen bg-gray-50 hover:bg-brandGreen/5 rounded-lg transition-colors"
+                            title="Edit Video"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </button>
+
+                          <button
+                            onClick={() => handleDeleteVideo(v.id)}
+                            className="p-2 text-red-500 hover:text-red-700 bg-red-500/5 rounded-lg transition-colors"
+                            title="Delete Video"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -2451,7 +2771,8 @@ export default function AdminDashboard({ onLogout, currentAdminName = "Ahmad Raz
                     <option value="PRC">PRC</option>
                     <option value="CAF">CAF</option>
                     <option value="Training/Induction">Training/Induction</option>
-                    <option value="CFAP & SCS">CFAP & SCS</option>
+                    <option value="CFAP & SCS (Finals)">CFAP & SCS (Finals)</option>
+                    <option value="CA Qualified">CA Qualified</option>
                     <option value="ACCA">ACCA</option>
                   </select>
                 </div>
@@ -2642,7 +2963,7 @@ export default function AdminDashboard({ onLogout, currentAdminName = "Ahmad Raz
                   >
                     <option value="prc">PRC (Entry Level)</option>
                     <option value="caf">CAF (Intermediate)</option>
-                    <option value="cfap">CFAP & SCS</option>
+                    <option value="cfap">CFAP & SCS (Finals)</option>
                     <option value="acca">ACCA</option>
                   </select>
                 </div>
@@ -2698,6 +3019,148 @@ export default function AdminDashboard({ onLogout, currentAdminName = "Ahmad Raz
                 className="w-full py-3 bg-brandGreen hover:bg-brandGreen-dark text-white font-black rounded-xl shadow-md transition-all active:scale-95 mt-2 text-center"
               >
                 {selectedCommunity ? 'Save Changes' : 'Publish Study Group'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: VIDEO & PODCAST CRUD */}
+      {isVideoModalOpen && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-6 max-w-lg w-full space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+              <h3 className="text-base font-black text-[#090C11] flex items-center space-x-2">
+                <Tv className="w-5 h-5 text-brandGreen" />
+                <span>{selectedVideo ? 'Edit Video / Podcast' : 'Upload New Video / Podcast'}</span>
+              </h3>
+              <button onClick={() => setIsVideoModalOpen(false)} className="text-gray-400 hover:text-gray-600">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveVideo} className="space-y-3.5 text-xs">
+              <div className="flex flex-col space-y-1">
+                <label className="font-bold text-gray-500">Video Title</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. ICAP Firm Induction Guide 2026"
+                  value={videoForm.title}
+                  onChange={(e) => setVideoForm({ ...videoForm, title: e.target.value })}
+                  className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+                />
+              </div>
+
+              <div className="flex flex-col space-y-1">
+                <label className="font-bold text-gray-500">YouTube Video Link or Video ID</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="https://www.youtube.com/watch?v=L_LUpnjgPso OR L_LUpnjgPso"
+                  value={videoForm.youtubeId}
+                  onChange={(e) => setVideoForm({ ...videoForm, youtubeId: e.target.value })}
+                  className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+                />
+                <span className="text-[10px] text-gray-400">Pastes full YouTube link or 11-char ID.</span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3.5">
+                <div className="flex flex-col space-y-1">
+                  <label className="font-bold text-gray-500">Category</label>
+                  <select
+                    value={videoForm.type}
+                    onChange={(e) => setVideoForm({ ...videoForm, type: e.target.value })}
+                    className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+                  >
+                    <option value="Inductions & Guidance">Inductions & Guidance</option>
+                    <option value="Podcasts & Interviews">Podcasts & Interviews</option>
+                    <option value="Exam Preparation">Exam Preparation</option>
+                    <option value="Career & Overseas">Career & Overseas</option>
+                  </select>
+                </div>
+
+                <div className="flex flex-col space-y-1">
+                  <label className="font-bold text-gray-500">Target Qualification</label>
+                  <select
+                    value={videoForm.qualification}
+                    onChange={(e) => setVideoForm({ ...videoForm, qualification: e.target.value })}
+                    className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+                  >
+                    <option value="CA">CA (ICAP)</option>
+                    <option value="ACCA">ACCA</option>
+                    <option value="Corporate / Tax">Corporate / Tax</option>
+                    <option value="All">All Students</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3.5">
+                <div className="flex flex-col space-y-1">
+                  <label className="font-bold text-gray-500">Speaker / Guest</label>
+                  <input
+                    type="text"
+                    required
+                    value={videoForm.guest}
+                    onChange={(e) => setVideoForm({ ...videoForm, guest: e.target.value })}
+                    className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+                  />
+                </div>
+
+                <div className="flex flex-col space-y-1">
+                  <label className="font-bold text-gray-500">Video Duration (e.g. "42:15")</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. 35:20"
+                    value={videoForm.duration}
+                    onChange={(e) => setVideoForm({ ...videoForm, duration: e.target.value })}
+                    className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col space-y-1">
+                <label className="font-bold text-gray-500">Description</label>
+                <textarea
+                  rows="3"
+                  required
+                  placeholder="Key takeaways and topic summary..."
+                  value={videoForm.desc}
+                  onChange={(e) => setVideoForm({ ...videoForm, desc: e.target.value })}
+                  className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+                />
+              </div>
+
+              <div className="flex flex-col space-y-1">
+                <label className="font-bold text-gray-500">Custom Thumbnail Image URL (Optional)</label>
+                <input
+                  type="text"
+                  placeholder="Auto-generated from YouTube if left empty"
+                  value={videoForm.thumbnail}
+                  onChange={(e) => setVideoForm({ ...videoForm, thumbnail: e.target.value })}
+                  className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+                />
+              </div>
+
+              <div className="flex items-center space-x-2 py-1">
+                <input
+                  type="checkbox"
+                  id="video_is_featured"
+                  checked={videoForm.isFeatured}
+                  onChange={(e) => setVideoForm({ ...videoForm, isFeatured: e.target.checked })}
+                  className="rounded text-brandGreen focus:ring-brandGreen"
+                />
+                <label htmlFor="video_is_featured" className="font-bold text-gray-700 select-none">
+                  Set as Featured Spotlight on Podcasts & Media page
+                </label>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-3 bg-brandGreen hover:bg-brandGreen-dark text-white font-black rounded-xl shadow-md transition-all active:scale-95 mt-2 text-center cursor-pointer"
+              >
+                {selectedVideo ? 'Save Changes' : 'Upload Video'}
               </button>
             </form>
           </div>

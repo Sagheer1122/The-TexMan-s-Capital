@@ -36,6 +36,7 @@ import Login from '../Login/Login';
 import AdminDashboard from '../AdminDashboard/AdminDashboard';
 import UserDashboard from '../UserDashboard/UserDashboard';
 import Events from '../Events/Events';
+import Podcasts from '../Podcasts/Podcasts';
 import { getProfiles, logoutUser, registerUser } from '../../../services/authService';
 import { INITIAL_JOBS } from '../../../data/jobsData';
 
@@ -188,6 +189,8 @@ export default function Home({ session, sessionLoading }) {
         setActiveTab('Counseling');
       } else if (hash === '#communities') {
         setActiveTab('Community');
+      } else if (hash === '#podcasts' || hash === '#videos' || hash === '#sessions') {
+        setActiveTab('Podcasts');
       } else if (hash === '#mission') {
         setActiveTab('Our Mission');
       } else if (hash === '#admin') {
@@ -208,7 +211,8 @@ export default function Home({ session, sessionLoading }) {
         if (subCat === 'prc') setResourcesCategory('PRC');
         else if (subCat === 'caf') setResourcesCategory('CAF');
         else if (subCat === 'induction') setResourcesCategory('Training/Induction');
-        else if (subCat === 'cfap') setResourcesCategory('CFAP & SCS');
+        else if (subCat === 'cfap') setResourcesCategory('CFAP & SCS (Finals)');
+        else if (subCat === 'qualified') setResourcesCategory('CA Qualified');
         else if (subCat === 'acca') setResourcesCategory('ACCA');
         else setResourcesCategory('All');
       } else if (hash === '#contact') {
@@ -656,14 +660,27 @@ export default function Home({ session, sessionLoading }) {
                       href="#resources-cfap"
                       onClick={(e) => {
                         e.preventDefault();
-                        setResourcesCategory('CFAP & SCS');
+                        setResourcesCategory('CFAP & SCS (Finals)');
                         setActiveTab('Resources');
                         window.location.hash = '#resources-cfap';
                       }}
-                      className={`block px-4 py-2.5 text-xs xl:text-sm font-medium transition-colors hover:text-brandGreen hover:bg-white/5 ${activeTab === 'Resources' && resourcesCategory === 'CFAP & SCS' ? 'text-brandGreen bg-white/5' : 'text-gray-300'
+                      className={`block px-4 py-2.5 text-xs xl:text-sm font-medium transition-colors hover:text-brandGreen hover:bg-white/5 ${activeTab === 'Resources' && resourcesCategory === 'CFAP & SCS (Finals)' ? 'text-brandGreen bg-white/5' : 'text-gray-300'
                         }`}
                     >
-                      CFAP & SCS
+                      CFAP & SCS (Finals)
+                    </a>
+                    <a
+                      href="#resources-qualified"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setResourcesCategory('CA Qualified');
+                        setActiveTab('Resources');
+                        window.location.hash = '#resources-qualified';
+                      }}
+                      className={`block px-4 py-2.5 text-xs xl:text-sm font-medium transition-colors hover:text-brandGreen hover:bg-white/5 ${activeTab === 'Resources' && resourcesCategory === 'CA Qualified' ? 'text-brandGreen bg-white/5' : 'text-gray-300'
+                        }`}
+                    >
+                      CA Qualified
                     </a>
                     <a
                       href="#resources-acca"
@@ -729,6 +746,17 @@ export default function Home({ session, sessionLoading }) {
                         }`}
                     >
                       Events
+                    </a>
+                    <a
+                      href="#podcasts"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setActiveTab('Podcasts');
+                        window.location.hash = '#podcasts';
+                      }}
+                      className={`block px-4 py-2.5 text-xs xl:text-sm font-medium transition-colors hover:text-brandGreen hover:bg-white/5 ${activeTab === 'Podcasts' ? 'text-brandGreen bg-white/5' : 'text-gray-300'}`}
+                    >
+                      Videos & Podcasts
                     </a>
                   </div>
                 </div>
@@ -1006,14 +1034,28 @@ export default function Home({ session, sessionLoading }) {
                     onClick={(e) => {
                       e.preventDefault();
                       setActiveTab('Resources');
-                      setResourcesCategory('CFAP & SCS');
+                      setResourcesCategory('CFAP & SCS (Finals)');
                       setMobileMenuOpen(false);
                       window.location.hash = '#resources-cfap';
                     }}
-                    className={`block py-2 px-4 rounded-xl text-sm ${activeTab === 'Resources' && resourcesCategory === 'CFAP & SCS' ? 'text-brandGreen bg-white/5 font-semibold' : 'text-gray-300'
+                    className={`block py-2 px-4 rounded-xl text-sm ${activeTab === 'Resources' && resourcesCategory === 'CFAP & SCS (Finals)' ? 'text-brandGreen bg-white/5 font-semibold' : 'text-gray-300'
                       }`}
                   >
-                    • CFAP & SCS
+                    • CFAP & SCS (Finals)
+                  </a>
+                  <a
+                    href="#resources-qualified"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setActiveTab('Resources');
+                      setResourcesCategory('CA Qualified');
+                      setMobileMenuOpen(false);
+                      window.location.hash = '#resources-qualified';
+                    }}
+                    className={`block py-2 px-4 rounded-xl text-sm ${activeTab === 'Resources' && resourcesCategory === 'CA Qualified' ? 'text-brandGreen bg-white/5 font-semibold' : 'text-gray-300'
+                      }`}
+                  >
+                    • CA Qualified
                   </a>
                   <a
                     href="#resources-acca"
@@ -1074,6 +1116,18 @@ export default function Home({ session, sessionLoading }) {
                       }`}
                   >
                     • Events
+                  </a>
+                  <a
+                    href="#podcasts"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setActiveTab('Podcasts');
+                      setMobileMenuOpen(false);
+                      window.location.hash = '#podcasts';
+                    }}
+                    className={`block py-2 px-4 rounded-xl text-sm ${activeTab === 'Podcasts' ? 'text-brandGreen bg-white/5 font-semibold' : 'text-gray-300'}`}
+                  >
+                    • Videos & Podcasts
                   </a>
                 </div>
               </div>
@@ -1204,637 +1258,768 @@ export default function Home({ session, sessionLoading }) {
 
       <div key={activeTab} className="animate-page-transition flex-grow flex flex-col">
         {activeTab === 'Jobs' ? (
-        <Jobs mode="jobs" initialSelectedJobId={selectedJobIdForModal} onClearInitialJob={() => setSelectedJobIdForModal(null)} savedJobs={savedJobs} onToggleSaveJob={handleToggleSaveJob} />
-      ) : activeTab === 'Inductions' ? (
-        <Jobs mode="inductions" initialSelectedJobId={selectedJobIdForModal} onClearInitialJob={() => setSelectedJobIdForModal(null)} savedJobs={savedJobs} onToggleSaveJob={handleToggleSaveJob} />
-      ) : activeTab === 'Overseas' ? (
-        <Jobs mode="overseas" initialSelectedJobId={selectedJobIdForModal} onClearInitialJob={() => setSelectedJobIdForModal(null)} savedJobs={savedJobs} onToggleSaveJob={handleToggleSaveJob} />
-      ) : (activeTab === 'Counseling' || activeTab === 'Career Support') ? (
-        <Counseling />
-      ) : activeTab === 'Community' ? (
-        <Community initialCommunityId={selectedCommunityIdForModal} onClearInitialCommunity={() => setSelectedCommunityIdForModal(null)} />
-      ) : activeTab === 'Our Mission' ? (
-        <Mission />
-      ) : activeTab === 'Resources' ? (
-        <Resources selectedCategory={resourcesCategory} setSelectedCategory={setResourcesCategory} setActiveTab={setActiveTab} />
-      ) : activeTab === 'Contact Us' ? (
-        <Contact />
-      ) : activeTab === 'Announcements' ? (
-        <Announcements initialAnnouncementId={selectedAnnouncementIdForModal} onClearInitialAnnouncement={() => setSelectedAnnouncementIdForModal(null)} />
-      ) : activeTab === 'Events' ? (
-        <Events />
-      ) : activeTab === 'Login' ? (
-        <Login
-          startFlipped={loginStartFlipped}
-          onLoginSuccess={() => {
-            setActiveTab('Home');
-            window.history.pushState(null, '', '#');
-          }}
-          onBack={() => {
-            setActiveTab('Home');
-            window.history.pushState(null, '', '#');
-          }}
-          onSignUpRedirect={() => {
-            window.history.pushState(null, '', '#signup');
-            setLoginStartFlipped(true);
-          }}
-          onLoginRedirect={() => {
-            window.history.pushState(null, '', '#login');
-            setLoginStartFlipped(false);
-          }}
-        />
-      ) : activeTab === 'AdminDashboard' ? (
-        <AdminDashboard
-          onLogout={async () => {
-            await logoutUser();
-            setIsLoggedIn(false);
-            setActiveTab('Home');
-            window.location.hash = '';
-          }}
-          currentAdminName={username || 'Ahmad Raza'}
-          session={session}
-          onProfileUpdate={(newProfile) => {
-            if (newProfile.full_name) {
-              setUsername(newProfile.full_name);
-              setAvatarLetter(newProfile.full_name.charAt(0).toUpperCase());
-            }
-          }}
-        />
-      ) : activeTab === 'UserDashboard' ? (
-        <UserDashboard
-          session={session}
-          initialSubTab={userDashboardTab}
-          onLogout={async () => {
-            await logoutUser();
-            setIsLoggedIn(false);
-            setActiveTab('Home');
-            window.location.hash = '';
-          }}
-          onGoHome={() => {
-            setActiveTab('Home');
-            window.location.hash = '';
-          }}
-          savedJobs={savedJobs}
-          onRemoveSavedJob={(id) => handleToggleSaveJob(id)}
-          onProfileUpdate={(newProfile) => {
-            if (newProfile.full_name) {
-              setUsername(newProfile.full_name);
-              setAvatarLetter(newProfile.full_name.charAt(0).toUpperCase());
-            }
-          }}
-        />
-      ) : (
-        <>
-          {/* 2. Hero Section */}
-          <section className="skyline-bg bg-navy text-white pt-12 pb-36 relative">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <Jobs mode="jobs" initialSelectedJobId={selectedJobIdForModal} onClearInitialJob={() => setSelectedJobIdForModal(null)} savedJobs={savedJobs} onToggleSaveJob={handleToggleSaveJob} />
+        ) : activeTab === 'Inductions' ? (
+          <Jobs mode="inductions" initialSelectedJobId={selectedJobIdForModal} onClearInitialJob={() => setSelectedJobIdForModal(null)} savedJobs={savedJobs} onToggleSaveJob={handleToggleSaveJob} />
+        ) : activeTab === 'Overseas' ? (
+          <Jobs mode="overseas" initialSelectedJobId={selectedJobIdForModal} onClearInitialJob={() => setSelectedJobIdForModal(null)} savedJobs={savedJobs} onToggleSaveJob={handleToggleSaveJob} />
+        ) : (activeTab === 'Counseling' || activeTab === 'Career Support') ? (
+          <Counseling />
+        ) : activeTab === 'Community' ? (
+          <Community initialCommunityId={selectedCommunityIdForModal} onClearInitialCommunity={() => setSelectedCommunityIdForModal(null)} />
+        ) : activeTab === 'Our Mission' ? (
+          <Mission />
+        ) : activeTab === 'Resources' ? (
+          <Resources selectedCategory={resourcesCategory} setSelectedCategory={setResourcesCategory} setActiveTab={setActiveTab} />
+        ) : activeTab === 'Contact Us' ? (
+          <Contact />
+        ) : activeTab === 'Announcements' ? (
+          <Announcements initialAnnouncementId={selectedAnnouncementIdForModal} onClearInitialAnnouncement={() => setSelectedAnnouncementIdForModal(null)} />
+        ) : activeTab === 'Events' ? (
+          <Events />
+        ) : activeTab === 'Podcasts' ? (
+          <Podcasts />
+        ) : activeTab === 'Login' ? (
+          <Login
+            startFlipped={loginStartFlipped}
+            onLoginSuccess={() => {
+              setActiveTab('Home');
+              window.history.pushState(null, '', '#');
+            }}
+            onBack={() => {
+              setActiveTab('Home');
+              window.history.pushState(null, '', '#');
+            }}
+            onSignUpRedirect={() => {
+              window.history.pushState(null, '', '#signup');
+              setLoginStartFlipped(true);
+            }}
+            onLoginRedirect={() => {
+              window.history.pushState(null, '', '#login');
+              setLoginStartFlipped(false);
+            }}
+          />
+        ) : activeTab === 'AdminDashboard' ? (
+          <AdminDashboard
+            onLogout={async () => {
+              await logoutUser();
+              setIsLoggedIn(false);
+              setActiveTab('Home');
+              window.location.hash = '';
+            }}
+            currentAdminName={username || 'Ahmad Raza'}
+            session={session}
+            onProfileUpdate={(newProfile) => {
+              if (newProfile.full_name) {
+                setUsername(newProfile.full_name);
+                setAvatarLetter(newProfile.full_name.charAt(0).toUpperCase());
+              }
+            }}
+          />
+        ) : activeTab === 'UserDashboard' ? (
+          <UserDashboard
+            session={session}
+            initialSubTab={userDashboardTab}
+            onLogout={async () => {
+              await logoutUser();
+              setIsLoggedIn(false);
+              setActiveTab('Home');
+              window.location.hash = '';
+            }}
+            onGoHome={() => {
+              setActiveTab('Home');
+              window.location.hash = '';
+            }}
+            savedJobs={savedJobs}
+            onRemoveSavedJob={(id) => handleToggleSaveJob(id)}
+            onProfileUpdate={(newProfile) => {
+              if (newProfile.full_name) {
+                setUsername(newProfile.full_name);
+                setAvatarLetter(newProfile.full_name.charAt(0).toUpperCase());
+              }
+            }}
+          />
+        ) : (
+          <>
+            {/* 2. Hero Section */}
+            <section className="skyline-bg bg-navy text-white pt-12 pb-36 relative">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
 
-                {/* Hero Left Content */}
-                <div className="lg:col-span-7 flex flex-col space-y-8">
-                  <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
-                    Helping CA & ACCA <br />
-                    Students Build <br />
-                    <span className="text-brandGreen">Successful Careers</span>
-                  </h1>
-                  <p className="text-lg sm:text-xl text-gray-300 max-w-xl font-normal leading-relaxed">
-                    Find jobs, inductions, free career guidance, resources and student communities across Pakistan.
-                  </p>
+                  {/* Hero Left Content */}
+                  <div className="lg:col-span-7 flex flex-col space-y-8 order-2 lg:order-1">
+                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+                      Helping CA & ACCA <br />
+                      Students Build <br />
+                      <span className="text-brandGreen">Successful Careers</span>
+                    </h1>
+                    <p className="text-lg sm:text-xl text-gray-300 max-w-xl font-normal leading-relaxed">
+                      Find jobs, inductions, free career guidance, resources and student communities across Pakistan.
+                    </p>
 
-                  <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                    <a
-                      href="#jobs"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setActiveTab('Jobs');
-                        window.location.hash = '#jobs';
-                      }}
-                      className="flex items-center justify-center px-6 py-4 bg-brandGreen hover:bg-brandGreen-dark text-white font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-emerald-500/25 group"
-                    >
-                      <Briefcase className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
-                      Explore Jobs
-                    </a>
-                    <a
-                      href="#communities"
-                      className="flex items-center justify-center px-6 py-4 border border-white/30 hover:border-white hover:bg-white/5 text-white font-semibold rounded-xl transition-all duration-200"
-                    >
-                      <Users className="w-5 h-5 mr-2" />
-                      Join Community
-                    </a>
-                  </div>
-
-                  {/* Stacked Avatars and Guided Students Count */}
-                  <div className="flex items-center space-x-4 pt-4">
-                    <div className="flex -space-x-3 overflow-hidden">
-                      <div className="inline-flex items-center justify-center h-10 w-10 rounded-full border-2 border-navy bg-gradient-to-tr from-amber-400 to-orange-500 text-xs font-bold text-white shadow-md">AS</div>
-                      <div className="inline-flex items-center justify-center h-10 w-10 rounded-full border-2 border-navy bg-gradient-to-tr from-blue-500 to-indigo-600 text-xs font-bold text-white shadow-md">KB</div>
-                      <div className="inline-flex items-center justify-center h-10 w-10 rounded-full border-2 border-navy bg-gradient-to-tr from-emerald-400 to-teal-500 text-xs font-bold text-white shadow-md">ZA</div>
-                      <div className="inline-flex items-center justify-center h-10 w-10 rounded-full border-2 border-navy bg-gradient-to-tr from-pink-500 to-rose-600 text-xs font-bold text-white shadow-md">MN</div>
+                    <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                      <a
+                        href="#jobs"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setActiveTab('Jobs');
+                          window.location.hash = '#jobs';
+                        }}
+                        className="flex items-center justify-center px-6 py-4 bg-brandGreen hover:bg-brandGreen-dark text-white font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-emerald-500/25 group"
+                      >
+                        <Briefcase className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
+                        Explore Jobs
+                      </a>
+                      <a
+                        href="#communities"
+                        className="flex items-center justify-center px-6 py-4 border border-white/30 hover:border-white hover:bg-white/5 text-white font-semibold rounded-xl transition-all duration-200"
+                      >
+                        <Users className="w-5 h-5 mr-2" />
+                        Join Community
+                      </a>
                     </div>
-                    <div className="flex flex-col">
-                      <span className="text-sm font-semibold text-gray-300">
-                        <strong className="text-brandGreen text-base">10,000+</strong> CA Students Guided
-                      </span>
-                      <div className="flex items-center space-x-1">
-                        <span className="w-2 h-2 rounded-full bg-brandGreen animate-pulse"></span>
-                        <span className="text-[11px] text-gray-400">Across Lahore, Karachi, Islamabad & globally</span>
+
+                    {/* Stacked Avatars and Guided Students Count */}
+                    <div className="flex items-center space-x-4 pt-4">
+                      <div className="flex -space-x-3 overflow-hidden">
+                        <div className="inline-flex items-center justify-center h-10 w-10 rounded-full border-2 border-navy bg-gradient-to-tr from-amber-400 to-orange-500 text-xs font-bold text-white shadow-md">AS</div>
+                        <div className="inline-flex items-center justify-center h-10 w-10 rounded-full border-2 border-navy bg-gradient-to-tr from-blue-500 to-indigo-600 text-xs font-bold text-white shadow-md">KB</div>
+                        <div className="inline-flex items-center justify-center h-10 w-10 rounded-full border-2 border-navy bg-gradient-to-tr from-emerald-400 to-teal-500 text-xs font-bold text-white shadow-md">ZA</div>
+                        <div className="inline-flex items-center justify-center h-10 w-10 rounded-full border-2 border-navy bg-gradient-to-tr from-pink-500 to-rose-600 text-xs font-bold text-white shadow-md">MN</div>
                       </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Hero Right Graphic Card (Saboor Ahmad Profile) */}
-                <div className="lg:col-span-5 flex flex-col items-center justify-center relative -translate-y-10 lg:-translate-y-24">
-                  {/* Profile Graphic Wrapper */}
-                  <div className="relative w-72 h-72 sm:w-80 sm:h-80 lg:w-96 lg:h-96 flex items-center justify-center">
-                    {/* Rotating outer dashed border */}
-                    <div className="absolute inset-0 rounded-full border-4 border-dashed border-brandGreen/40 flex items-center justify-center p-3 animate-[spin_60s_linear_infinite] pointer-events-none">
-                      <div className="w-full h-full rounded-full border-2 border-brandGreen bg-navy-dark overflow-hidden pointer-events-auto"></div>
-                    </div>
-
-                    {/* Portrait Image container over the border */}
-                    <div className="relative w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 rounded-full overflow-hidden border-4 border-brandGreen shadow-2xl flex items-center justify-center bg-navy-dark hover:scale-105 transition-transform duration-300">
-                      <img
-                        src={mentorImage}
-                        alt="Saboor Ahmad - Mentor Profile"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Mentor Quote Card - Repositioned to the right side with bottom offset */}
-                  <div className="relative mt-8 w-full max-w-sm mx-auto lg:absolute lg:bottom-0 lg:right-12 lg:translate-y-[105%] lg:mt-0 glass-panel text-white p-5 rounded-2xl shadow-2xl border border-white/10 hover:border-brandGreen/40 transition-colors duration-300">
-                    <div className="flex items-start space-x-3">
-                      <div className="p-2 bg-brandGreen/10 rounded-lg flex-shrink-0">
-                        <MessageSquare className="w-5 h-5 text-brandGreen" />
-                      </div>
-                      <div className="flex flex-col space-y-2">
-                        <p className="text-xs italic text-gray-300 leading-relaxed">
-                          "My mission is to guide CA/ACCA students, help them build their careers and connect them with the right opportunities."
-                        </p>
-                        <div className="border-t border-white/10 pt-2 flex flex-col">
-                          <span className="text-3xl font-signature text-brandGreen tracking-wide select-none leading-none pt-1">Saboor Ahmad</span>
-                          <span className="text-[10px] text-gray-400 mt-1">CA & ACCA | Career Counselor & Mentor</span>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-semibold text-gray-300">
+                          <strong className="text-brandGreen text-base">10,000+</strong> CA Students Guided
+                        </span>
+                        <div className="flex items-center space-x-1">
+                          <span className="w-2 h-2 rounded-full bg-brandGreen animate-pulse"></span>
+                          <span className="text-[11px] text-gray-400">Across Lahore, Karachi, Islamabad & globally</span>
                         </div>
                       </div>
                     </div>
                   </div>
+
+                  {/* Hero Right Graphic Card (Saboor Ahmad Profile) */}
+                  <div className="lg:col-span-5 flex flex-col items-center justify-center relative translate-y-0 lg:-translate-y-24 mt-6 lg:mt-0 order-1 lg:order-2">
+                    {/* Profile Graphic Wrapper */}
+                    <div className="relative w-72 h-72 sm:w-80 sm:h-80 lg:w-96 lg:h-96 flex items-center justify-center">
+                      {/* Rotating outer dashed border */}
+                      <div className="absolute inset-0 rounded-full border-4 border-dashed border-brandGreen/40 flex items-center justify-center p-3 animate-[spin_60s_linear_infinite] pointer-events-none">
+                        <div className="w-full h-full rounded-full border-2 border-brandGreen bg-navy-dark overflow-hidden pointer-events-auto"></div>
+                      </div>
+
+                      {/* Portrait Image container over the border */}
+                      <div className="relative w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 rounded-full overflow-hidden border-4 border-brandGreen shadow-2xl flex items-center justify-center bg-navy-dark hover:scale-105 transition-transform duration-300">
+                        <img
+                          src={mentorImage}
+                          alt="Saboor Ahmad - Mentor Profile"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Mentor Quote Card - Repositioned to the right side with bottom offset */}
+                    <div className="relative mt-8 w-full max-w-sm mx-auto lg:absolute lg:bottom-0 lg:right-12 lg:translate-y-[105%] lg:mt-0 glass-panel text-white p-5 rounded-2xl shadow-2xl border border-white/10 hover:border-brandGreen/40 transition-colors duration-300">
+                      <div className="flex items-start space-x-3">
+                        <div className="p-2 bg-brandGreen/10 rounded-lg flex-shrink-0">
+                          <MessageSquare className="w-5 h-5 text-brandGreen" />
+                        </div>
+                        <div className="flex flex-col space-y-2">
+                          <p className="text-xs italic text-gray-300 leading-relaxed">
+                            "My mission is to guide CA/ACCA students, help them build their careers and connect them with the right opportunities."
+                          </p>
+                          <div className="border-t border-white/10 pt-2 flex flex-col">
+                            <span className="text-3xl font-signature text-brandGreen tracking-wide select-none leading-none pt-1">Saboor Ahmad</span>
+                            <span className="text-[10px] text-gray-400 mt-1">CA & ACCA | Career Counselor & Mentor</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </section>
+
+            {/* 3. Floating Stats Bar Section */}
+            <section className="relative -mt-16 z-20 px-4 sm:px-6 lg:px-8 reveal-on-scroll">
+              <div className="max-w-7xl mx-auto">
+                <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sm:p-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+                    {stats.map((stat, idx) => (
+                      <div
+                        key={idx}
+                        className={`flex items-center space-x-4 py-4 md:py-0 md:px-6 first:pl-0 ${idx > 0 ? 'pt-6 md:pt-0' : ''}`}
+                      >
+                        <div className={`p-4 rounded-xl ${stat.bg} flex-shrink-0`}>
+                          {stat.icon}
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-2xl sm:text-3xl font-extrabold text-navy font-sans leading-none">{stat.value}</span>
+                          <span className="text-xs sm:text-sm text-gray-500 mt-1 font-medium">{stat.label}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* 4. Latest Induction Updates Section */}
+            <section id="jobs" className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 reveal-on-scroll">
+              <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                <div className="flex flex-col space-y-3">
+                  <span className="text-brandGreen text-xs tracking-widest font-extrabold uppercase">Opportunities</span>
+                  <h2 className="text-3xl font-extrabold text-navy tracking-tight relative pb-3">
+                    LATEST INDUCTION UPDATES
+                    <span className="absolute bottom-0 left-0 w-16 h-1 bg-brandGreen rounded-full" />
+                  </h2>
+                </div>
+                <a
+                  href="#jobs"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setActiveTab('Jobs');
+                    window.location.hash = '#jobs';
+                  }}
+                  className="group flex items-center text-sm font-bold text-navy hover:text-brandGreen transition-colors mt-4 md:mt-0"
+                >
+                  View All Jobs
+                  <ArrowRight className="w-4 h-4 ml-1.5 group-hover:translate-x-1 transition-transform" />
+                </a>
+              </div>
+
+              {/* 5-Card Responsive Job Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                {jobCards.map((job, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between premium-card-hover"
+                  >
+                    <div>
+                      {/* Firm Logo & Company Header */}
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex-shrink-0">
+                          {job.logoSvg}
+                        </div>
+                        <span className="px-2.5 py-1 bg-gray-100 text-[10px] font-bold text-gray-600 rounded-full">
+                          {job.company.split(' ')[0]}
+                        </span>
+                      </div>
+
+                      {/* Job Title & Details */}
+                      <div className="mt-4">
+                        <h3 className="font-bold text-gray-900 text-sm leading-snug group-hover:text-brandGreen transition-colors">
+                          {job.company}
+                        </h3>
+                        <p className="text-[13px] text-gray-500 mt-1 font-medium">{job.title}</p>
+                      </div>
+
+                      {/* Location with Icon */}
+                      <div className="flex items-center text-gray-400 text-xs mt-3">
+                        <MapPin className="w-3.5 h-3.5 mr-1 text-gray-400 flex-shrink-0" />
+                        <span>{job.location}</span>
+                      </div>
+
+                      {/* Qualification Tag */}
+                      <div className="mt-4">
+                        <span className="inline-block px-2.5 py-1 bg-emerald-500/5 text-brandGreen border border-brandGreen/10 rounded text-xs font-semibold">
+                          {job.badge}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Deadline and Details Button */}
+                    <div className="mt-6 border-t border-gray-100 pt-4">
+                      <div className="flex items-center justify-between mb-3 text-xs">
+                        <span className="text-gray-400 flex items-center">
+                          <Clock className="w-3 h-3 mr-1" /> Deadline:
+                        </span>
+                        <span className="font-bold text-red-500">{job.deadline}</span>
+                      </div>
+                      <button
+                        onClick={() => handleViewJobDetails(job.id)}
+                        className="w-full py-2 bg-navy hover:bg-brandGreen text-white font-medium rounded-lg text-xs transition-colors duration-200 focus:outline-none"
+                      >
+                        View Details
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* 5. Free Guidance Section */}
+            <section id="guidance" className="py-20 bg-gray-50 border-y border-gray-100 reveal-on-scroll">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+                <div className="text-center max-w-2xl mx-auto mb-16 flex flex-col items-center">
+                  <span className="text-brandGreen text-xs tracking-widest font-extrabold uppercase mb-2">Mentor-Led Support</span>
+                  <h2 className="text-3xl sm:text-4xl font-extrabold text-navy tracking-tight pb-3 relative">
+                    FREE CAREER GUIDANCE
+                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-brandGreen rounded-full" />
+                  </h2>
+                  <p className="text-gray-500 mt-4 text-sm sm:text-base">
+                    Get direct resources and professional feedback curated by industry leaders to kickstart your corporate journey.
+                  </p>
                 </div>
 
-              </div>
-            </div>
-          </section>
-
-          {/* 3. Floating Stats Bar Section */}
-          <section className="relative -mt-16 z-20 px-4 sm:px-6 lg:px-8 reveal-on-scroll">
-            <div className="max-w-7xl mx-auto">
-              <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sm:p-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 divide-y md:divide-y-0 md:divide-x divide-gray-100">
-                  {stats.map((stat, idx) => (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                  {guidanceItems.map((item, idx) => (
                     <div
                       key={idx}
-                      className={`flex items-center space-x-4 py-4 md:py-0 md:px-6 first:pl-0 ${idx > 0 ? 'pt-6 md:pt-0' : ''}`}
+                      className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col justify-between premium-card-hover"
                     >
-                      <div className={`p-4 rounded-xl ${stat.bg} flex-shrink-0`}>
-                        {stat.icon}
+                      <div>
+                        <div className={`w-14 h-14 rounded-2xl bg-gradient-to-tr ${item.color} flex items-center justify-center mb-6 shadow-sm`}>
+                          {item.icon}
+                        </div>
+                        <h3 className="text-lg font-bold text-navy mb-3">{item.title}</h3>
+                        <p className="text-gray-500 text-xs sm:text-sm leading-relaxed">{item.desc}</p>
                       </div>
-                      <div className="flex flex-col">
-                        <span className="text-2xl sm:text-3xl font-extrabold text-navy font-sans leading-none">{stat.value}</span>
-                        <span className="text-xs sm:text-sm text-gray-500 mt-1 font-medium">{stat.label}</span>
+
+                      <div className="mt-6 pt-4 border-t border-gray-50">
+                        <button
+                          onClick={() => setActiveTab('Career Support')}
+                          className="flex items-center text-xs font-bold text-brandGreen hover:text-brandGreen-dark transition-colors group"
+                        >
+                          Learn More
+                          <ChevronRight className="w-4 h-4 ml-0.5 group-hover:translate-x-0.5 transition-transform" />
+                        </button>
                       </div>
                     </div>
                   ))}
                 </div>
-              </div>
-            </div>
-          </section>
 
-          {/* 4. Latest Induction Updates Section */}
-          <section id="jobs" className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 reveal-on-scroll">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
-              <div className="flex flex-col space-y-3">
-                <span className="text-brandGreen text-xs tracking-widest font-extrabold uppercase">Opportunities</span>
-                <h2 className="text-3xl font-extrabold text-navy tracking-tight relative pb-3">
-                  LATEST INDUCTION UPDATES
-                  <span className="absolute bottom-0 left-0 w-16 h-1 bg-brandGreen rounded-full" />
-                </h2>
               </div>
-              <a
-                href="#jobs"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setActiveTab('Jobs');
-                  window.location.hash = '#jobs';
-                }}
-                className="group flex items-center text-sm font-bold text-navy hover:text-brandGreen transition-colors mt-4 md:mt-0"
-              >
-                View All Jobs
-                <ArrowRight className="w-4 h-4 ml-1.5 group-hover:translate-x-1 transition-transform" />
-              </a>
-            </div>
+            </section>
 
-            {/* 5-Card Responsive Job Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-              {jobCards.map((job, idx) => (
-                <div
-                  key={idx}
-                  className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between premium-card-hover"
-                >
-                  <div>
-                    {/* Firm Logo & Company Header */}
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex-shrink-0">
-                        {job.logoSvg}
+            {/* 6. Why Choose Us Section */}
+            <section id="why-us" className="py-24 bg-navy text-white relative reveal-on-scroll">
+              {/* Subtle grid pattern mask in CSS */}
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,200,83,0.05),transparent)] pointer-events-none"></div>
+
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
+                <div className="text-center max-w-2xl mx-auto mb-20 flex flex-col items-center">
+                  <span className="text-brandGreen text-xs tracking-widest font-extrabold uppercase mb-2">Our Value</span>
+                  <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight pb-3 relative text-white">
+                    WHY CHOOSE US?
+                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-brandGreen rounded-full" />
+                  </h2>
+                  <p className="text-gray-400 mt-4 text-sm sm:text-base">
+                    Providing end-to-end guidance to bridge the gap between hard work and top-tier placements.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
+                  {whyChooseUs.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="flex flex-col items-center text-center p-6 bg-white/5 border border-white/10 rounded-2xl hover:border-brandGreen/45 hover:bg-white/10 transition-all duration-300"
+                    >
+                      <div className="w-12 h-12 rounded-xl bg-brandGreen/10 border border-brandGreen/30 flex items-center justify-center mb-6">
+                        {item.icon}
                       </div>
-                      <span className="px-2.5 py-1 bg-gray-100 text-[10px] font-bold text-gray-600 rounded-full">
-                        {job.company.split(' ')[0]}
-                      </span>
+                      <h3 className="text-base font-bold mb-3 tracking-wide text-white">{item.title}</h3>
+                      <p className="text-xs text-gray-400 leading-relaxed font-normal">{item.desc}</p>
+                    </div>
+                  ))}
+                </div>
+
+              </div>
+            </section>
+
+            {/* Videos, Sessions & Podcasts Section */}
+            <section id="podcasts-section" className="py-24 bg-white border-b border-gray-100 reveal-on-scroll">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="text-center max-w-2xl mx-auto mb-16 flex flex-col items-center">
+                  <span className="text-brandGreen text-xs tracking-widest font-extrabold uppercase mb-2">Media & Mentorship</span>
+                  <h2 className="text-3xl sm:text-4xl font-extrabold text-navy tracking-tight pb-3 relative">
+                    VIDEOS, SESSIONS & PODCASTS
+                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-brandGreen rounded-full" />
+                  </h2>
+                  <p className="text-gray-500 mt-4 text-sm sm:text-base">
+                    Watch our exclusive mentorship sessions, partner interview preparation guidelines, and career podcasts.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {/* Card 1 */}
+                  <div className="bg-bgLight rounded-2xl overflow-hidden border border-gray-100 shadow-sm flex flex-col justify-between premium-card-hover">
+                    <div>
+                      {/* Thumbnail Area */}
+                      <div className="relative aspect-video bg-navy-dark flex items-center justify-center overflow-hidden group/thumb">
+                        <div className="absolute inset-0 bg-gradient-to-t from-navy/80 to-transparent z-10"></div>
+                        <div className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_center,rgba(0,200,83,0.3),transparent)] group-hover/thumb:scale-110 transition-transform duration-500"></div>
+                        <div className="z-20 w-14 h-14 rounded-full bg-brandGreen/90 hover:bg-brandGreen text-white flex items-center justify-center shadow-lg cursor-pointer transform group-hover/thumb:scale-110 transition-all duration-300">
+                          <svg className="w-6 h-6 fill-current ml-1" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </div>
+                        <span className="absolute bottom-3 right-3 bg-navy-dark/80 text-white text-[10px] font-bold px-2 py-0.5 rounded z-20">45:12</span>
+                      </div>
+
+                      {/* Body */}
+                      <div className="p-6">
+                        <span className="text-brandGreen text-[10px] font-extrabold uppercase tracking-widest">Interview Series</span>
+                        <h3 className="text-lg font-extrabold text-navy mt-2 leading-snug">Big 4 Partner Interview Secrets & Preparation</h3>
+                        <p className="text-gray-500 text-xs mt-3 leading-relaxed">
+                          An in-depth session discussing what audit partners look for in CA & ACCA candidates during final round interviews.
+                        </p>
+                      </div>
                     </div>
 
-                    {/* Job Title & Details */}
-                    <div className="mt-4">
-                      <h3 className="font-bold text-gray-900 text-sm leading-snug group-hover:text-brandGreen transition-colors">
-                        {job.company}
-                      </h3>
-                      <p className="text-[13px] text-gray-500 mt-1 font-medium">{job.title}</p>
-                    </div>
-
-                    {/* Location with Icon */}
-                    <div className="flex items-center text-gray-400 text-xs mt-3">
-                      <MapPin className="w-3.5 h-3.5 mr-1 text-gray-400 flex-shrink-0" />
-                      <span>{job.location}</span>
-                    </div>
-
-                    {/* Qualification Tag */}
-                    <div className="mt-4">
-                      <span className="inline-block px-2.5 py-1 bg-emerald-500/5 text-brandGreen border border-brandGreen/10 rounded text-xs font-semibold">
-                        {job.badge}
-                      </span>
+                    {/* Footer */}
+                    <div className="px-6 pb-6 pt-4 border-t border-gray-100/50 flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-8 h-8 rounded-full bg-brandGreen text-white font-bold flex items-center justify-center text-xs">SA</div>
+                        <span className="text-[11px] font-semibold text-gray-600">Saboor Ahmad</span>
+                      </div>
+                      <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="px-3.5 py-1.5 bg-navy hover:bg-brandGreen text-white hover:text-white rounded-lg text-xs font-bold transition-all duration-300">
+                        Watch Now
+                      </a>
                     </div>
                   </div>
 
-                  {/* Deadline and Details Button */}
-                  <div className="mt-6 border-t border-gray-100 pt-4">
-                    <div className="flex items-center justify-between mb-3 text-xs">
-                      <span className="text-gray-400 flex items-center">
-                        <Clock className="w-3 h-3 mr-1" /> Deadline:
-                      </span>
-                      <span className="font-bold text-red-500">{job.deadline}</span>
+                  {/* Card 2 */}
+                  <div className="bg-bgLight rounded-2xl overflow-hidden border border-gray-100 shadow-sm flex flex-col justify-between premium-card-hover">
+                    <div>
+                      {/* Thumbnail Area */}
+                      <div className="relative aspect-video bg-navy-dark flex items-center justify-center overflow-hidden group/thumb">
+                        <div className="absolute inset-0 bg-gradient-to-t from-navy/80 to-transparent z-10"></div>
+                        <div className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_center,rgba(0,200,83,0.3),transparent)] group-hover/thumb:scale-110 transition-transform duration-500"></div>
+                        <div className="z-20 w-14 h-14 rounded-full bg-brandGreen/90 hover:bg-brandGreen text-white flex items-center justify-center shadow-lg cursor-pointer transform group-hover/thumb:scale-110 transition-all duration-300">
+                          <svg className="w-6 h-6 fill-current ml-1" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </div>
+                        <span className="absolute bottom-3 right-3 bg-navy-dark/80 text-white text-[10px] font-bold px-2 py-0.5 rounded z-20">32:45</span>
+                      </div>
+
+                      {/* Body */}
+                      <div className="p-6">
+                        <span className="text-brandGreen text-[10px] font-extrabold uppercase tracking-widest">Career Guidance</span>
+                        <h3 className="text-lg font-extrabold text-navy mt-2 leading-snug">CA vs ACCA: Corporate Scope & Salary Packages</h3>
+                        <p className="text-gray-500 text-xs mt-3 leading-relaxed">
+                          A detailed comparison of qualifications, training structures, and job scopes inside and outside Pakistan.
+                        </p>
+                      </div>
                     </div>
-                    <button
-                      onClick={() => handleViewJobDetails(job.id)}
-                      className="w-full py-2 bg-navy hover:bg-brandGreen text-white font-medium rounded-lg text-xs transition-colors duration-200 focus:outline-none"
-                    >
-                      View Details
-                    </button>
+
+                    {/* Footer */}
+                    <div className="px-6 pb-6 pt-4 border-t border-gray-100/50 flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-8 h-8 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs">US</div>
+                        <span className="text-[11px] font-semibold text-gray-600">Usman Saleem</span>
+                      </div>
+                      <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="px-3.5 py-1.5 bg-navy hover:bg-brandGreen text-white hover:text-white rounded-lg text-xs font-bold transition-all duration-300">
+                        Watch Now
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Card 3 */}
+                  <div className="bg-bgLight rounded-2xl overflow-hidden border border-gray-100 shadow-sm flex flex-col justify-between premium-card-hover">
+                    <div>
+                      {/* Thumbnail Area */}
+                      <div className="relative aspect-video bg-navy-dark flex items-center justify-center overflow-hidden group/thumb">
+                        <div className="absolute inset-0 bg-gradient-to-t from-navy/80 to-transparent z-10"></div>
+                        <div className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_center,rgba(0,200,83,0.3),transparent)] group-hover/thumb:scale-110 transition-transform duration-500"></div>
+                        <div className="z-20 w-14 h-14 rounded-full bg-brandGreen/90 hover:bg-brandGreen text-white flex items-center justify-center shadow-lg cursor-pointer transform group-hover/thumb:scale-110 transition-all duration-300">
+                          <svg className="w-6 h-6 fill-current ml-1" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </div>
+                        <span className="absolute bottom-3 right-3 bg-navy-dark/80 text-white text-[10px] font-bold px-2 py-0.5 rounded z-20">55:18</span>
+                      </div>
+
+                      {/* Body */}
+                      <div className="p-6">
+                        <span className="text-brandGreen text-[10px] font-extrabold uppercase tracking-widest">International Jobs</span>
+                        <h3 className="text-lg font-extrabold text-navy mt-2 leading-snug">Securing Middle East Jobs for Qualified Professionals</h3>
+                        <p className="text-gray-500 text-xs mt-3 leading-relaxed">
+                          Step-by-step roadmap for qualified professionals to secure roles in UAE, Saudi Arabia, and other Gulf regions.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Footer */}
+                    <div className="px-6 pb-6 pt-4 border-t border-gray-100/50 flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-8 h-8 rounded-full bg-brandGreen text-white font-bold flex items-center justify-center text-xs">SA</div>
+                        <span className="text-[11px] font-semibold text-gray-600">Saboor Ahmad</span>
+                      </div>
+                      <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="px-3.5 py-1.5 bg-navy hover:bg-brandGreen text-white hover:text-white rounded-lg text-xs font-bold transition-all duration-300">
+                        Watch Now
+                      </a>
+                    </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          </section>
+              </div>
+            </section>
 
-          {/* 5. Free Guidance Section */}
-          <section id="guidance" className="py-20 bg-gray-50 border-y border-gray-100 reveal-on-scroll">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* 7. Communities & Resources Sections */}
+            <section className="py-24 bg-bgLight reveal-on-scroll">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+
+                  {/* Communities Column */}
+                  <div id="communities" className="lg:col-span-6 flex flex-col justify-between">
+                    <div>
+                      <div className="flex flex-col space-y-2 mb-8">
+                        <span className="text-brandGreen text-xs tracking-widest font-extrabold uppercase">WhatsApp Channels</span>
+                        <h2 className="text-2xl sm:text-3xl font-extrabold text-navy tracking-tight relative pb-3">
+                          STUDENT COMMUNITIES
+                          <span className="absolute bottom-0 left-0 w-16 h-1 bg-brandGreen rounded-full" />
+                        </h2>
+                        <p className="text-xs sm:text-sm text-gray-500 pt-2">
+                          Interact directly with seniors, access immediate vacancy alerts, and share peer-to-peer prep files.
+                        </p>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {communities.map((comm, idx) => (
+                          <div
+                            key={idx}
+                            className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm premium-card-hover"
+                          >
+                            <div className="flex items-center justify-between mb-2">
+                              <h3 className="font-bold text-gray-800 text-sm sm:text-base">{comm.name}</h3>
+                              <span className="text-[10px] px-2 py-0.5 bg-emerald-500/10 text-brandGreen font-bold rounded-full">{comm.members}</span>
+                            </div>
+                            <p className="text-xs text-gray-400 leading-relaxed">{comm.desc}</p>
+                            <button
+                              onClick={() => handleJoinCommunity(comm.id)}
+                              className="mt-4 flex items-center text-xs font-semibold text-brandGreen hover:underline cursor-pointer"
+                            >
+                              Join Room <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Resources Column */}
+                  <div id="resources" className="lg:col-span-6 flex flex-col justify-between mt-12 lg:mt-0">
+                    <div>
+                      <div className="flex flex-col space-y-2 mb-8">
+                        <span className="text-brandGreen text-xs tracking-widest font-extrabold uppercase">Preparation Material</span>
+                        <h2 className="text-2xl sm:text-3xl font-extrabold text-navy tracking-tight relative pb-3">
+                          POPULAR RESOURCES
+                          <span className="absolute bottom-0 left-0 w-16 h-1 bg-brandGreen rounded-full" />
+                        </h2>
+                        <p className="text-xs sm:text-sm text-gray-500 pt-2">
+                          Free, download-ready toolkits created by qualified experts to elevate your professional toolkit.
+                        </p>
+                      </div>
+
+                      <div className="space-y-4">
+                        {resources.map((res, idx) => (
+                          <div
+                            key={idx}
+                            className="bg-white rounded-xl p-4 border border-gray-100 flex items-center justify-between shadow-sm premium-card-hover"
+                          >
+                            <div className="flex items-center space-x-4">
+                              <div className="w-10 h-10 rounded-lg bg-emerald-500/5 flex items-center justify-center flex-shrink-0">
+                                {res.icon}
+                              </div>
+                              <div className="flex flex-col">
+                                <span className="font-bold text-navy text-sm sm:text-base">{res.title}</span>
+                                <span className="text-xs text-gray-400 font-medium">{res.type} • {res.size}</span>
+                              </div>
+                            </div>
+                            <button
+                              onClick={() => alert(`Downloading ${res.title}...`)}
+                              className="px-4 py-2 bg-gray-50 hover:bg-brandGreen hover:text-white border border-gray-200 hover:border-brandGreen rounded-lg text-xs font-semibold text-navy transition-all duration-200"
+                            >
+                              Download
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="mt-6">
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setActiveTab('Resources');
+                            window.location.hash = '#resources';
+                          }}
+                          className="w-full flex items-center justify-center py-3.5 bg-navy hover:bg-brandGreen text-white font-bold rounded-xl text-xs transition-colors duration-200 shadow-md cursor-pointer"
+                        >
+                          View All Resources
+                          <ArrowRight className="w-4 h-4 ml-1.5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </section>
+
+            {/* 8. Announcements Preview Section */}
+            <section id="announcements" className="py-24 bg-gray-50 border-t border-gray-100 reveal-on-scroll">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+                <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                  <div className="flex flex-col space-y-3">
+                    <span className="text-brandGreen text-xs tracking-widest font-extrabold uppercase">Updates & Events</span>
+                    <h2 className="text-3xl font-extrabold text-navy tracking-tight relative pb-3">
+                      LATEST ANNOUNCEMENTS
+                      <span className="absolute bottom-0 left-0 w-16 h-1 bg-brandGreen rounded-full" />
+                    </h2>
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setActiveTab('Announcements');
+                      window.location.hash = '#announcements';
+                    }}
+                    className="flex items-center text-sm font-bold text-navy hover:text-brandGreen transition-colors mt-4 md:mt-0 cursor-pointer"
+                  >
+                    All Announcements
+                    <ArrowRight className="w-4 h-4 ml-1.5" />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  {announcements.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col justify-between relative overflow-hidden premium-card-hover"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between mb-4">
+                          <span className="px-2.5 py-0.5 bg-emerald-500/10 text-[10px] font-bold text-brandGreen rounded-full">
+                            {item.tag}
+                          </span>
+                          <span className="text-xs text-gray-400 font-medium">{item.date}</span>
+                        </div>
+                        <h3 className="text-base font-bold text-navy leading-snug hover:text-brandGreen cursor-pointer transition-colors mb-3">
+                          {item.title}
+                        </h3>
+                        <p className="text-xs text-gray-500 leading-relaxed font-normal">{item.desc}</p>
+                      </div>
+
+                      <div className="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between">
+                        <span className={`text-[10px] uppercase tracking-wider font-extrabold ${item.status === 'Open' ? 'text-green-500' : item.status === 'Upcoming' ? 'text-amber-500' : 'text-blue-500'
+                          }`}>
+                          • {item.status}
+                        </span>
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleViewAnnouncement(item.id);
+                          }}
+                          className="text-xs font-bold text-navy hover:text-brandGreen transition-colors cursor-pointer"
+                        >
+                          Read Full Post
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+              </div>
+            </section>
+
+            {/* 9. Success Stories Section */}
+            <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 reveal-on-scroll">
 
               <div className="text-center max-w-2xl mx-auto mb-16 flex flex-col items-center">
-                <span className="text-brandGreen text-xs tracking-widest font-extrabold uppercase mb-2">Mentor-Led Support</span>
+                <span className="text-brandGreen text-xs tracking-widest font-extrabold uppercase mb-2">Testimonials</span>
                 <h2 className="text-3xl sm:text-4xl font-extrabold text-navy tracking-tight pb-3 relative">
-                  FREE CAREER GUIDANCE
+                  SUCCESS STORIES
                   <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-brandGreen rounded-full" />
                 </h2>
                 <p className="text-gray-500 mt-4 text-sm sm:text-base">
-                  Get direct resources and professional feedback curated by industry leaders to kickstart your corporate journey.
+                  Read stories of how CA and ACCA students secured articleships and careers through our guidance resources.
                 </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                {guidanceItems.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col justify-between premium-card-hover"
-                  >
-                    <div>
-                      <div className={`w-14 h-14 rounded-2xl bg-gradient-to-tr ${item.color} flex items-center justify-center mb-6 shadow-sm`}>
-                        {item.icon}
-                      </div>
-                      <h3 className="text-lg font-bold text-navy mb-3">{item.title}</h3>
-                      <p className="text-gray-500 text-xs sm:text-sm leading-relaxed">{item.desc}</p>
-                    </div>
-
-                    <div className="mt-6 pt-4 border-t border-gray-50">
-                      <button
-                        onClick={() => setActiveTab('Career Support')}
-                        className="flex items-center text-xs font-bold text-brandGreen hover:text-brandGreen-dark transition-colors group"
-                      >
-                        Learn More
-                        <ChevronRight className="w-4 h-4 ml-0.5 group-hover:translate-x-0.5 transition-transform" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-            </div>
-          </section>
-
-          {/* 6. Why Choose Us Section */}
-          <section id="why-us" className="py-24 bg-navy text-white relative reveal-on-scroll">
-            {/* Subtle grid pattern mask in CSS */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,200,83,0.05),transparent)] pointer-events-none"></div>
-
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-
-              <div className="text-center max-w-2xl mx-auto mb-20 flex flex-col items-center">
-                <span className="text-brandGreen text-xs tracking-widest font-extrabold uppercase mb-2">Our Value</span>
-                <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight pb-3 relative text-white">
-                  WHY CHOOSE US?
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-brandGreen rounded-full" />
-                </h2>
-                <p className="text-gray-400 mt-4 text-sm sm:text-base">
-                  Providing end-to-end guidance to bridge the gap between hard work and top-tier placements.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
-                {whyChooseUs.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="flex flex-col items-center text-center p-6 bg-white/5 border border-white/10 rounded-2xl hover:border-brandGreen/45 hover:bg-white/10 transition-all duration-300"
-                  >
-                    <div className="w-12 h-12 rounded-xl bg-brandGreen/10 border border-brandGreen/30 flex items-center justify-center mb-6">
-                      {item.icon}
-                    </div>
-                    <h3 className="text-base font-bold mb-3 tracking-wide text-white">{item.title}</h3>
-                    <p className="text-xs text-gray-400 leading-relaxed font-normal">{item.desc}</p>
-                  </div>
-                ))}
-              </div>
-
-            </div>
-          </section>
-
-          {/* 7. Communities & Resources Sections */}
-          <section className="py-24 bg-bgLight reveal-on-scroll">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-
-                {/* Communities Column */}
-                <div id="communities" className="lg:col-span-6 flex flex-col justify-between">
-                  <div>
-                    <div className="flex flex-col space-y-2 mb-8">
-                      <span className="text-brandGreen text-xs tracking-widest font-extrabold uppercase">WhatsApp Channels</span>
-                      <h2 className="text-2xl sm:text-3xl font-extrabold text-navy tracking-tight relative pb-3">
-                        STUDENT COMMUNITIES
-                        <span className="absolute bottom-0 left-0 w-16 h-1 bg-brandGreen rounded-full" />
-                      </h2>
-                      <p className="text-xs sm:text-sm text-gray-500 pt-2">
-                        Interact directly with seniors, access immediate vacancy alerts, and share peer-to-peer prep files.
-                      </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {communities.map((comm, idx) => (
-                        <div
-                          key={idx}
-                          className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm premium-card-hover"
-                        >
-                          <div className="flex items-center justify-between mb-2">
-                            <h3 className="font-bold text-gray-800 text-sm sm:text-base">{comm.name}</h3>
-                            <span className="text-[10px] px-2 py-0.5 bg-emerald-500/10 text-brandGreen font-bold rounded-full">{comm.members}</span>
-                          </div>
-                          <p className="text-xs text-gray-400 leading-relaxed">{comm.desc}</p>
-                          <button
-                            onClick={() => handleJoinCommunity(comm.id)}
-                            className="mt-4 flex items-center text-xs font-semibold text-brandGreen hover:underline cursor-pointer"
-                          >
-                            Join Room <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Resources Column */}
-                <div id="resources" className="lg:col-span-6 flex flex-col justify-between mt-12 lg:mt-0">
-                  <div>
-                    <div className="flex flex-col space-y-2 mb-8">
-                      <span className="text-brandGreen text-xs tracking-widest font-extrabold uppercase">Preparation Material</span>
-                      <h2 className="text-2xl sm:text-3xl font-extrabold text-navy tracking-tight relative pb-3">
-                        POPULAR RESOURCES
-                        <span className="absolute bottom-0 left-0 w-16 h-1 bg-brandGreen rounded-full" />
-                      </h2>
-                      <p className="text-xs sm:text-sm text-gray-500 pt-2">
-                        Free, download-ready toolkits created by qualified experts to elevate your professional toolkit.
-                      </p>
-                    </div>
-
-                    <div className="space-y-4">
-                      {resources.map((res, idx) => (
-                        <div
-                          key={idx}
-                          className="bg-white rounded-xl p-4 border border-gray-100 flex items-center justify-between shadow-sm premium-card-hover"
-                        >
-                          <div className="flex items-center space-x-4">
-                            <div className="w-10 h-10 rounded-lg bg-emerald-500/5 flex items-center justify-center flex-shrink-0">
-                              {res.icon}
-                            </div>
-                            <div className="flex flex-col">
-                              <span className="font-bold text-navy text-sm sm:text-base">{res.title}</span>
-                              <span className="text-xs text-gray-400 font-medium">{res.type} • {res.size}</span>
-                            </div>
-                          </div>
-                          <button
-                            onClick={() => alert(`Downloading ${res.title}...`)}
-                            className="px-4 py-2 bg-gray-50 hover:bg-brandGreen hover:text-white border border-gray-200 hover:border-brandGreen rounded-lg text-xs font-semibold text-navy transition-all duration-200"
-                          >
-                            Download
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="mt-6">
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setActiveTab('Resources');
-                          window.location.hash = '#resources';
-                        }}
-                        className="w-full flex items-center justify-center py-3.5 bg-navy hover:bg-brandGreen text-white font-bold rounded-xl text-xs transition-colors duration-200 shadow-md cursor-pointer"
-                      >
-                        View All Resources
-                        <ArrowRight className="w-4 h-4 ml-1.5" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </section>
-
-          {/* 8. Announcements Preview Section */}
-          <section id="announcements" className="py-24 bg-gray-50 border-t border-gray-100 reveal-on-scroll">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-              <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
-                <div className="flex flex-col space-y-3">
-                  <span className="text-brandGreen text-xs tracking-widest font-extrabold uppercase">Updates & Events</span>
-                  <h2 className="text-3xl font-extrabold text-navy tracking-tight relative pb-3">
-                    LATEST ANNOUNCEMENTS
-                    <span className="absolute bottom-0 left-0 w-16 h-1 bg-brandGreen rounded-full" />
-                  </h2>
-                </div>
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setActiveTab('Announcements');
-                    window.location.hash = '#announcements';
-                  }}
-                  className="flex items-center text-sm font-bold text-navy hover:text-brandGreen transition-colors mt-4 md:mt-0 cursor-pointer"
-                >
-                  All Announcements
-                  <ArrowRight className="w-4 h-4 ml-1.5" />
-                </button>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {announcements.map((item, idx) => (
+                {successStories.map((story, idx) => (
                   <div
                     key={idx}
-                    className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col justify-between relative overflow-hidden premium-card-hover"
+                    className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col justify-between relative premium-card-hover"
                   >
-                    <div>
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="px-2.5 py-0.5 bg-emerald-500/10 text-[10px] font-bold text-brandGreen rounded-full">
-                          {item.tag}
-                        </span>
-                        <span className="text-xs text-gray-400 font-medium">{item.date}</span>
-                      </div>
-                      <h3 className="text-base font-bold text-navy leading-snug hover:text-brandGreen cursor-pointer transition-colors mb-3">
-                        {item.title}
-                      </h3>
-                      <p className="text-xs text-gray-500 leading-relaxed font-normal">{item.desc}</p>
+                    {/* Green quote icon absolute at top right */}
+                    <div className="absolute top-6 right-6 text-brandGreen/25">
+                      <svg className="w-10 h-10 fill-current" viewBox="0 0 24 24">
+                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                      </svg>
                     </div>
 
-                    <div className="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between">
-                      <span className={`text-[10px] uppercase tracking-wider font-extrabold ${item.status === 'Open' ? 'text-green-500' : item.status === 'Upcoming' ? 'text-amber-500' : 'text-blue-500'
-                        }`}>
-                        • {item.status}
-                      </span>
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleViewAnnouncement(item.id);
-                        }}
-                        className="text-xs font-bold text-navy hover:text-brandGreen transition-colors cursor-pointer"
-                      >
-                        Read Full Post
-                      </button>
+                    <div>
+                      <p className="text-sm text-gray-600 italic leading-relaxed pt-2">
+                        "{story.quote}"
+                      </p>
+                    </div>
+
+                    <div className="mt-8 pt-4 border-t border-gray-100 flex items-center space-x-4">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-brandGreen to-emerald-600 text-white font-bold flex items-center justify-center flex-shrink-0 shadow-md">
+                        {story.avatar}
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="font-bold text-navy text-sm leading-none">{story.name}</span>
+                        <span className="text-xs text-brandGreen font-medium mt-1">{story.role}</span>
+                        <span className="text-[10px] text-gray-400 mt-0.5">Placed at {story.placedAt}</span>
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
 
-            </div>
-          </section>
+              {/* Carousel Dots */}
+              <div className="flex items-center justify-center space-x-2 mt-10">
+                <span className="w-6 h-2 rounded-full bg-brandGreen"></span>
+                <span className="w-2 h-2 rounded-full bg-gray-300"></span>
+                <span className="w-2 h-2 rounded-full bg-gray-300"></span>
+              </div>
+            </section>
 
-          {/* 9. Success Stories Section */}
-          <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 reveal-on-scroll">
+            {/* 10. WhatsApp CTA Section */}
+            <section className="px-4 sm:px-6 lg:px-8 pb-16 reveal-on-scroll">
+              <div className="max-w-7xl mx-auto">
+                <div className="bg-gradient-to-r from-emerald-600 to-green-500 rounded-3xl p-8 sm:p-12 shadow-xl shadow-emerald-500/10 text-white flex flex-col lg:flex-row items-center justify-between relative overflow-hidden">
+                  {/* Visual background ripple rings */}
+                  <div className="absolute -left-16 -bottom-16 w-64 h-64 rounded-full bg-white/5 border-4 border-white/5 pointer-events-none" />
+                  <div className="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-white/5 border border-white/5 pointer-events-none" />
 
-            <div className="text-center max-w-2xl mx-auto mb-16 flex flex-col items-center">
-              <span className="text-brandGreen text-xs tracking-widest font-extrabold uppercase mb-2">Testimonials</span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-navy tracking-tight pb-3 relative">
-                SUCCESS STORIES
-                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-brandGreen rounded-full" />
-              </h2>
-              <p className="text-gray-500 mt-4 text-sm sm:text-base">
-                Read stories of how CA and ACCA students secured articleships and careers through our guidance resources.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {successStories.map((story, idx) => (
-                <div
-                  key={idx}
-                  className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col justify-between relative premium-card-hover"
-                >
-                  {/* Green quote icon absolute at top right */}
-                  <div className="absolute top-6 right-6 text-brandGreen/25">
-                    <svg className="w-10 h-10 fill-current" viewBox="0 0 24 24">
-                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                    </svg>
-                  </div>
-
-                  <div>
-                    <p className="text-sm text-gray-600 italic leading-relaxed pt-2">
-                      "{story.quote}"
-                    </p>
-                  </div>
-
-                  <div className="mt-8 pt-4 border-t border-gray-100 flex items-center space-x-4">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-brandGreen to-emerald-600 text-white font-bold flex items-center justify-center flex-shrink-0 shadow-md">
-                      {story.avatar}
+                  <div className="flex flex-col lg:flex-row items-center space-y-6 lg:space-y-0 lg:space-x-8 text-center lg:text-left z-10">
+                    <div className="w-20 h-20 rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0 animate-pulse border border-white/10">
+                      <svg className="w-12 h-12 fill-current text-white" viewBox="0 0 24 24">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.455 5.703 1.456h.004c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                      </svg>
                     </div>
-                    <div className="flex flex-col">
-                      <span className="font-bold text-navy text-sm leading-none">{story.name}</span>
-                      <span className="text-xs text-brandGreen font-medium mt-1">{story.role}</span>
-                      <span className="text-[10px] text-gray-400 mt-0.5">Placed at {story.placedAt}</span>
+                    <div className="flex flex-col space-y-2">
+                      <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Join Our Free CA Student Community</h3>
+                      <p className="text-xs sm:text-sm text-white/80 max-w-xl font-medium leading-relaxed">
+                        Stay updated with latest Jobs, Inductions & Announcements. Join the active discussion room with over 10,000+ peers.
+                      </p>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
 
-            {/* Carousel Dots */}
-            <div className="flex items-center justify-center space-x-2 mt-10">
-              <span className="w-6 h-2 rounded-full bg-brandGreen"></span>
-              <span className="w-2 h-2 rounded-full bg-gray-300"></span>
-              <span className="w-2 h-2 rounded-full bg-gray-300"></span>
-            </div>
-          </section>
-
-          {/* 10. WhatsApp CTA Section */}
-          <section className="px-4 sm:px-6 lg:px-8 pb-16 reveal-on-scroll">
-            <div className="max-w-7xl mx-auto">
-              <div className="bg-gradient-to-r from-emerald-600 to-green-500 rounded-3xl p-8 sm:p-12 shadow-xl shadow-emerald-500/10 text-white flex flex-col lg:flex-row items-center justify-between relative overflow-hidden">
-                {/* Visual background ripple rings */}
-                <div className="absolute -left-16 -bottom-16 w-64 h-64 rounded-full bg-white/5 border-4 border-white/5 pointer-events-none" />
-                <div className="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-white/5 border border-white/5 pointer-events-none" />
-
-                <div className="flex flex-col lg:flex-row items-center space-y-6 lg:space-y-0 lg:space-x-8 text-center lg:text-left z-10">
-                  <div className="w-20 h-20 rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0 animate-pulse border border-white/10">
-                    <svg className="w-12 h-12 fill-current text-white" viewBox="0 0 24 24">
-                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.455 5.703 1.456h.004c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                    </svg>
+                  <div className="mt-8 lg:mt-0 z-10 w-full sm:w-auto">
+                    <button
+                      onClick={() => {
+                        setActiveTab('Community');
+                        window.location.hash = '#communities';
+                      }}
+                      className="w-full sm:w-auto flex items-center justify-center px-8 py-4 bg-white hover:bg-gray-50 text-emerald-600 font-bold rounded-xl shadow-lg transition-all duration-200 group"
+                    >
+                      Join Now
+                      <ArrowRight className="w-5 h-5 ml-2 text-emerald-600 group-hover:translate-x-1 transition-transform" />
+                    </button>
                   </div>
-                  <div className="flex flex-col space-y-2">
-                    <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Join Our Free CA Student Community</h3>
-                    <p className="text-xs sm:text-sm text-white/80 max-w-xl font-medium leading-relaxed">
-                      Stay updated with latest Jobs, Inductions & Announcements. Join the active discussion room with over 10,000+ peers.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-8 lg:mt-0 z-10 w-full sm:w-auto">
-                  <button
-                    onClick={() => {
-                      setActiveTab('Community');
-                      window.location.hash = '#communities';
-                    }}
-                    className="w-full sm:w-auto flex items-center justify-center px-8 py-4 bg-white hover:bg-gray-50 text-emerald-600 font-bold rounded-xl shadow-lg transition-all duration-200 group"
-                  >
-                    Join Now
-                    <ArrowRight className="w-5 h-5 ml-2 text-emerald-600 group-hover:translate-x-1 transition-transform" />
-                  </button>
                 </div>
               </div>
-            </div>
-          </section>
-        </>
-      )}
+            </section>
+          </>
+        )}
       </div>
 
       {/* 11. Footer */}

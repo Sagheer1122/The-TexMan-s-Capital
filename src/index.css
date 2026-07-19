@@ -41,9 +41,9 @@
   content: '';
   position: absolute;
   inset: 0;
-  background-image: linear-gradient(to bottom, rgba(2, 27, 58, 0.95), rgba(2, 27, 58, 0.98)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" preserveAspectRatio="none" fill="rgba(0, 200, 83, 0.03)"><path d="M0,400 L0,300 L30,300 L30,220 L50,220 L50,180 L80,180 L80,320 L100,320 L100,280 L130,280 L130,200 L160,200 L160,150 L190,150 L190,300 L210,300 L210,240 L240,240 L240,170 L270,170 L270,110 L310,110 L310,340 L330,340 L330,260 L360,260 L360,200 L390,200 L390,140 L420,140 L420,290 L450,290 L450,220 L480,220 L480,180 L510,180 L510,350 L530,350 L530,270 L560,270 L560,190 L590,190 L590,130 L630,130 L630,310 L650,310 L650,250 L680,250 L680,180 L710,180 L710,100 L750,100 L750,330 L770,330 L770,270 L800,270 L800,210 L830,210 L830,160 L860,160 L860,300 L880,300 L880,240 L910,240 L910,180 L940,180 L940,120 L980,120 L980,340 L1000,340 L1000,260 L1030,260 L1030,190 L1060,190 L1060,140 L1090,140 L1090,290 L1120,290 L1120,220 L1150,220 L1150,170 L1180,170 L1180,400 Z"/></svg>');
+  background-image: linear-gradient(to bottom, rgba(2, 27, 58, 0.85), rgba(2, 27, 58, 0.95)), url('./assets/home_hero_bg.png');
   background-size: cover;
-  background-position: bottom center;
+  background-position: center;
   z-index: 0;
   pointer-events: none;
 }

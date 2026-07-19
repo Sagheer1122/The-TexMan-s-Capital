@@ -37,7 +37,8 @@ export default function Resources({ selectedCategory: externalCategory, setSelec
     { name: 'PRC', count: 4, icon: <GraduationCap className="w-5 h-5" />, color: 'text-amber-500', bg: 'bg-amber-500/5', border: 'hover:border-amber-500/30' },
     { name: 'CAF', count: 28, icon: <BookOpen className="w-5 h-5" />, color: 'text-blue-500', bg: 'bg-blue-500/5', border: 'hover:border-blue-500/30' },
     { name: 'Training/Induction', count: 42, icon: <FileText className="w-5 h-5" />, color: 'text-emerald-500', bg: 'bg-emerald-500/5', border: 'hover:border-emerald-500/30' },
-    { name: 'CFAP & SCS', count: 18, icon: <Award className="w-5 h-5" />, color: 'text-purple-500', bg: 'bg-purple-500/5', border: 'hover:border-purple-500/30' },
+    { name: 'CFAP & SCS (Finals)', count: 18, icon: <Award className="w-5 h-5" />, color: 'text-purple-500', bg: 'bg-purple-500/5', border: 'hover:border-purple-500/30' },
+    { name: 'CA Qualified', count: 12, icon: <Award className="w-5 h-5" />, color: 'text-indigo-500', bg: 'bg-indigo-500/5', border: 'hover:border-indigo-500/30' },
     { name: 'ACCA', count: 20, icon: <Users className="w-5 h-5" />, color: 'text-cyan-500', bg: 'bg-cyan-500/5', border: 'hover:border-cyan-500/30' }
   ];
 
@@ -89,9 +90,9 @@ export default function Resources({ selectedCategory: externalCategory, setSelec
   ];
 
   const INITIAL_ALL_RESOURCES = [
-    { id: 11, title: 'ICAP Code of Ethics', desc: 'Complete ICAP Code of Ethics handbook for CA students.', date: '22 May 2026', downloads: 188, category: 'CFAP & SCS' },
+    { id: 11, title: 'ICAP Code of Ethics', desc: 'Complete ICAP Code of Ethics handbook for CA students.', date: '22 May 2026', downloads: 188, category: 'CFAP & SCS (Finals)' },
     { id: 12, title: 'Taxation MCQs with Answers', desc: 'Important MCQs with detailed explanations for CA Final Taxation.', date: '20 May 2026', downloads: 367, category: 'CAF' },
-    { id: 13, title: 'IAS - Important Notes', desc: 'Short notes for International Accounting Standards (CA Final).', date: '18 May 2026', downloads: 289, category: 'CFAP & SCS' },
+    { id: 13, title: 'IAS - Important Notes', desc: 'Short notes for International Accounting Standards (CA Final).', date: '18 May 2026', downloads: 289, category: 'CFAP & SCS (Finals)' },
     { id: 14, title: 'Interview Tips & Etiquette', desc: 'Professional tips for CA firm articleship interviews.', date: '16 May 2026', downloads: 315, category: 'Training/Induction' },
     { id: 15, title: 'CA Articleship Checklist', desc: 'Checklist for starting and managing articleship applications.', date: '14 May 2026', downloads: 201, category: 'Training/Induction' },
     { id: 16, title: 'ACCA CV Format Guide', desc: 'Official CV builder guide and guidelines for ACCA students.', date: '10 May 2026', downloads: 142, category: 'ACCA' },
@@ -99,7 +100,7 @@ export default function Resources({ selectedCategory: externalCategory, setSelec
     { id: 18, title: 'Big 4 Firms Selection Process', desc: 'A guide explaining selection rounds of major accounting firms.', date: '01 May 2026', downloads: 588, category: 'Training/Induction' },
     { id: 19, title: 'ACCA ATS-Friendly CV Template', desc: 'ATS-compatible curriculum vitae layout tailored specifically for ACCA trainees and affiliates.', date: '30 May 2026', downloads: 189, category: 'ACCA' },
     { id: 20, title: 'Big 4 Trainee CV Template (Word)', desc: 'Professional, recruiter-approved Microsoft Word resume template for CA articleship applications.', date: '28 May 2026', downloads: 422, category: 'Training/Induction' },
-    { id: 21, title: 'Executive Finance Resume Layout', desc: 'Minimalist, modern executive layout for qualified CAs/ACCAs targeting corporate jobs.', date: '25 May 2026', downloads: 156, category: 'CFAP & SCS' },
+    { id: 21, title: 'Executive Finance Resume Layout', desc: 'Minimalist, modern executive layout for qualified CAs/ACCAs targeting corporate jobs.', date: '25 May 2026', downloads: 156, category: 'CFAP & SCS (Finals)' },
     { id: 22, title: 'KPMG Advisory Prep Handbook', desc: 'Curated technical and behavioral questions asked during KPMG Pakistan Advisory round.', date: '29 May 2026', downloads: 277, category: 'Training/Induction' },
     { id: 23, title: 'PwC Tax & Legal Interview Prep Guide', desc: 'Crucial tax concepts, income tax rules, and local regulations commonly tested in PwC interviews.', date: '26 May 2026', downloads: 305, category: 'Training/Induction' },
     { id: 24, title: 'Deloitte HR & Partner Round Prep', desc: 'Strategy guide and response templates for handling situational questions in Deloitte partner rounds.', date: '23 May 2026', downloads: 412, category: 'Training/Induction' },
@@ -113,11 +114,14 @@ export default function Resources({ selectedCategory: externalCategory, setSelec
     { id: 32, title: 'ACCA Performance Management Flashcards', desc: 'Detailed revision flashcards for PM (Performance Management) syllabus by qualified mentors.', date: '15 May 2026', downloads: 390, category: 'ACCA' },
     { id: 33, title: 'ICAP Training Regulations Handbook', desc: 'Official guidelines on articleship duration, leaves, transfers, and registry eligibility.', date: '25 May 2026', downloads: 492, category: 'Training/Induction' },
     { id: 34, title: 'ACCA PER Achievement Roadmap', desc: 'Comprehensive guide explaining how to complete your Practical Experience Requirement objectives.', date: '21 May 2026', downloads: 377, category: 'ACCA' },
-    { id: 35, title: 'Post-Articleship Corporate Opportunities', desc: 'Career path guide on selecting between audit, tax, commercial finance, or management consulting.', date: '18 May 2026', downloads: 512, category: 'CFAP & SCS' },
+    { id: 35, title: 'Post-Articleship Corporate Opportunities', desc: 'Career path guide on selecting between audit, tax, commercial finance, or management consulting.', date: '18 May 2026', downloads: 512, category: 'CFAP & SCS (Finals)' },
     { id: 36, title: 'PRC-5 Introduction to Accounting Revision Notes', desc: 'Syllabus guidelines, double-entry bookkeeping rules, and ledger templates for CA PRC-5.', date: '12 June 2026', downloads: 145, category: 'PRC' },
     { id: 37, title: 'PRC-2 Quantitative Methods Formula Sheet', desc: 'Complete compiled mathematical and statistical formulas sheet for PRC-2 exams.', date: '11 June 2026', downloads: 198, category: 'PRC' },
     { id: 38, title: 'PRC-1 Business Writing & Comprehension Guide', desc: 'Essential grammar rules, business letter formats, and mock exam questions for PRC-1.', date: '08 June 2026', downloads: 120, category: 'PRC' },
-    { id: 39, title: 'PRC-3 Principles of Economics Revision Slides', desc: 'Visual summaries of microeconomics and economics concepts for PRC-3.', date: '05 June 2026', downloads: 162, category: 'PRC' }
+    { id: 39, title: 'PRC-3 Principles of Economics Revision Slides', desc: 'Visual summaries of microeconomics and economics concepts for PRC-3.', date: '05 June 2026', downloads: 162, category: 'PRC' },
+    { id: 40, title: 'Qualified CA Resume Format', desc: 'Premium resume template designed specifically for qualified CAs targeting corporate leadership roles.', date: '10 June 2026', downloads: 340, category: 'CA Qualified' },
+    { id: 41, title: 'Gulf & Middle East Job Placement Guide', desc: 'Comprehensive PDF handbook on securing job placements, visas, and high-paying roles in the GCC region.', date: '08 June 2026', downloads: 512, category: 'CA Qualified' },
+    { id: 42, title: 'Big 4 International Office Transfer Checklist', desc: 'Step-by-step checklist for qualified professionals seeking secondment or direct transfer to global offices.', date: '04 June 2026', downloads: 289, category: 'CA Qualified' }
   ];
 
   const INITIAL_RESOURCES = [
@@ -747,7 +751,8 @@ export default function Resources({ selectedCategory: externalCategory, setSelec
                   <option value="PRC">PRC</option>
                   <option value="CAF">CAF</option>
                   <option value="Training/Induction">Training/Induction</option>
-                  <option value="CFAP & SCS">CFAP & SCS</option>
+                  <option value="CFAP & SCS (Finals)">CFAP & SCS (Finals)</option>
+                  <option value="CA Qualified">CA Qualified</option>
                   <option value="ACCA">ACCA</option>
                 </select>
               </div>
