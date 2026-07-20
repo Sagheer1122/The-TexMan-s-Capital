@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useBodyScrollLock } from '../../../hooks/useBodyScrollLock';
+import PortalModal from '../../../components/PortalModal';
 import {
   User,
   Bookmark,
@@ -1183,9 +1185,9 @@ export default function UserDashboard({ session, onLogout, onProfileUpdate, save
       </main>
 
       {/* Job Detail Modal Popup */}
-      {selectedJobDetail && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 border border-gray-100 shadow-2xl relative space-y-4 max-h-[85vh] overflow-y-auto text-left">
+      <PortalModal isOpen={!!selectedJobDetail} onClose={() => setSelectedJobDetail(null)} maxWidth="max-w-lg" className="p-6 space-y-4">
+        {selectedJobDetail && (
+          <>
             <button
               onClick={() => setSelectedJobDetail(null)}
               className="absolute right-4 top-4 p-1.5 bg-gray-50 hover:bg-gray-100 text-gray-500 rounded-full transition-colors cursor-pointer"
@@ -1248,14 +1250,14 @@ export default function UserDashboard({ session, onLogout, onProfileUpdate, save
                 </button>
               </div>
             </div>
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </PortalModal>
 
       {/* Inquiry Detail Conversation Modal */}
-      {selectedQueryDetail && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-white rounded-3xl max-w-xl w-full p-6 border border-gray-100 shadow-2xl relative space-y-6 text-left">
+      <PortalModal isOpen={!!selectedQueryDetail} onClose={() => setSelectedQueryDetail(null)} maxWidth="max-w-xl" className="p-6 space-y-6">
+        {selectedQueryDetail && (
+          <>
             <button
               onClick={() => setSelectedQueryDetail(null)}
               className="absolute right-4 top-4 p-1.5 bg-gray-50 hover:bg-gray-100 text-gray-500 rounded-full transition-colors cursor-pointer"
@@ -1304,9 +1306,9 @@ export default function UserDashboard({ session, onLogout, onProfileUpdate, save
                 Close Conversation
               </button>
             </div>
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </PortalModal>
 
     </div>
   );

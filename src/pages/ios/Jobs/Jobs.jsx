@@ -18,6 +18,8 @@ import jobsHeroBg from '../../../assets/jobs_hero_bg.png';
 
 
 import { INITIAL_JOBS } from '../../../data/jobsData';
+import { useBodyScrollLock } from '../../../hooks/useBodyScrollLock';
+import PortalModal from '../../../components/PortalModal';
 
 const getJobs = async () => [];
 
@@ -136,6 +138,7 @@ export default function Jobs({
   const [localSavedJobs, setLocalSavedJobs] = useState([1, 3, 5]);
   const savedJobs = propsSavedJobs !== undefined ? propsSavedJobs : localSavedJobs;
   const [selectedJob, setSelectedJob] = useState(null);
+  useBodyScrollLock(!!selectedJob);
 
   useEffect(() => {
     if (initialSelectedJobId) {
@@ -932,19 +935,11 @@ export default function Jobs({
       </section>
 
       {/* 5. Detailed Interactive Modal Popup */}
-      {selectedJob && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 overflow-y-auto">
-          {/* Glass backdrop click handler */}
-          <div
-            onClick={() => setSelectedJob(null)}
-            className="absolute inset-0 bg-navy/60 backdrop-blur-sm transition-opacity"
-          />
-
-          {/* Modal Container */}
-          <div className="bg-white rounded-3xl overflow-hidden max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl relative z-10 border border-gray-100 animate-fadeIn">
-
+      <PortalModal isOpen={!!selectedJob} onClose={() => setSelectedJob(null)} maxWidth="max-w-2xl">
+        {selectedJob && (
+          <>
             {/* Modal Header */}
-            <div className="p-6 bg-navy text-white flex items-start justify-between relative">
+            <div className="p-6 bg-navy text-white flex items-start justify-between relative shrink-0">
               <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center border border-white/10 flex-shrink-0">
                   {selectedJob.logoSvg}
@@ -954,16 +949,10 @@ export default function Jobs({
                   <span className="text-xs font-semibold text-brandGreen">{selectedJob.company}</span>
                 </div>
               </div>
-              <button
-                onClick={() => setSelectedJob(null)}
-                className="p-1 rounded-lg hover:bg-white/10 text-white/70 hover:text-white transition-colors cursor-pointer"
-              >
-                <X className="w-6 h-6" />
-              </button>
             </div>
 
-            {/* Modal Body */}
-            <div className="p-6 overflow-y-auto space-y-6 flex-grow">
+            {/* Modal Body - Internal Scroll */}
+            <div className="p-6 overflow-y-auto space-y-6 flex-1 text-left">
 
               {/* Job Stats Bar */}
               <div className="grid grid-cols-3 gap-2 bg-gray-50 p-3.5 rounded-2xl text-center border border-gray-100">
@@ -976,25 +965,25 @@ export default function Jobs({
                   <span className="text-xs font-extrabold text-navy mt-0.5">{selectedJob.jobType}</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Deadline</span>
-                  <span className="text-xs font-extrabold text-red-500 mt-0.5">{selectedJob.deadline}</span>
+                  <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Eligibility</span>
+                  <span className="text-xs font-extrabold text-navy mt-0.5">{selectedJob.level}</span>
                 </div>
               </div>
 
-              {/* Description */}
-              <div className="space-y-2.5">
-                <h4 className="text-sm font-bold text-navy uppercase tracking-wider">Job Description</h4>
-                <p className="text-xs sm:text-sm text-gray-600 leading-relaxed font-normal">
+              {/* Job Overview */}
+              <div>
+                <h4 className="text-sm font-extrabold text-navy mb-2 uppercase tracking-wide">Role Specifications</h4>
+                <p className="text-xs sm:text-sm text-gray-600 leading-relaxed whitespace-pre-line font-medium">
                   {selectedJob.description}
                 </p>
               </div>
 
-              {/* Requirements checklist */}
-              <div className="space-y-3">
-                <h4 className="text-sm font-bold text-navy uppercase tracking-wider">Eligibility Requirements</h4>
-                <ul className="space-y-2.5 text-xs sm:text-sm text-gray-600 font-medium">
-                  {selectedJob.requirements.map((req, idx) => (
-                    <li key={idx} className="flex items-start">
+              {/* Candidate Requirements */}
+              <div>
+                <h4 className="text-sm font-extrabold text-navy mb-2 uppercase tracking-wide">Candidate Requirements</h4>
+                <ul className="space-y-2 text-xs sm:text-sm text-gray-600 font-medium">
+                  {selectedJob.requirements && selectedJob.requirements.map((req, index) => (
+                    <li key={index} className="flex items-start">
                       <CheckCircle className="w-4 h-4 text-brandGreen mr-2.5 mt-0.5 shrink-0" />
                       <span>{req}</span>
                     </li>
@@ -1002,12 +991,10 @@ export default function Jobs({
                 </ul>
               </div>
 
-
-
             </div>
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </PortalModal>
 
     </div>
   );

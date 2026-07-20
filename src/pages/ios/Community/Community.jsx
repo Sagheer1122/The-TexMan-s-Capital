@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useBodyScrollLock } from '../../../hooks/useBodyScrollLock';
+import PortalModal from '../../../components/PortalModal';
 import {
   Users,
   MessageSquare,
@@ -151,6 +153,7 @@ export default function Community({ initialCommunityId, onClearInitialCommunity 
   const [activeFilter, setActiveFilter] = useState('all');
   const [selectedCommunity, setSelectedCommunity] = useState(null);
   const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
+  useBodyScrollLock(isJoinModalOpen && !!selectedCommunity);
 
   useEffect(() => {
     if (initialCommunityId) {
@@ -594,10 +597,9 @@ export default function Community({ initialCommunityId, onClearInitialCommunity 
       </section>
 
       {/* 4. Join Confirmation Modal */}
-      {isJoinModalOpen && selectedCommunity && (
-        <div className="fixed inset-0 bg-navy/60 backdrop-blur-sm flex items-center justify-center z-50 px-4">
-          <div className="bg-white rounded-3xl max-w-sm w-full overflow-hidden shadow-2xl border border-gray-100 flex flex-col relative animate-in fade-in zoom-in-95 duration-200">
-
+      <PortalModal isOpen={isJoinModalOpen && !!selectedCommunity} onClose={() => setIsJoinModalOpen(false)} maxWidth="max-w-sm">
+        {selectedCommunity && (
+          <>
             {/* Header */}
             <div className="px-6 py-4.5 border-b border-gray-100 flex items-center justify-between bg-gray-50">
               <div>
@@ -659,10 +661,9 @@ export default function Community({ initialCommunityId, onClearInitialCommunity 
                 </button>
               </div>
             </div>
-
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </PortalModal>
 
     </div>
   );

@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useBodyScrollLock } from '../../../hooks/useBodyScrollLock';
+import PortalModal from '../../../components/PortalModal';
 import {
   Calendar,
   Clock,
@@ -21,6 +23,7 @@ export default function Events() {
   
   // Registration modal states
   const [selectedEventForModal, setSelectedEventForModal] = useState(null);
+  useBodyScrollLock(!!selectedEventForModal);
   const [isRegisteredSuccess, setIsRegisteredSuccess] = useState(false);
   const [registrationForm, setRegistrationForm] = useState({
     name: '',
@@ -518,10 +521,15 @@ export default function Events() {
       </section>
 
       {/* ── 4. Registration Modal ── */}
-      {selectedEventForModal && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-navy-dark bg-opacity-80 backdrop-blur-md animate-fadeIn">
-          <div className="bg-[#011227] border border-brandGreen/20 w-full max-w-md rounded-3xl shadow-2xl p-6 sm:p-8 animate-scaleIn relative flex flex-col max-h-[90vh] overflow-hidden text-left">
-            
+      <PortalModal
+        isOpen={!!selectedEventForModal}
+        onClose={() => setSelectedEventForModal(null)}
+        maxWidth="max-w-md"
+        className="bg-[#011227] border border-brandGreen/20 p-6 sm:p-8 text-left"
+        backdropClassName="bg-navy-dark/80 backdrop-blur-md"
+      >
+        {selectedEventForModal && (
+          <>
             {/* Glowing Backdrop inside Modal */}
             <div className="absolute top-0 right-0 w-24 h-24 bg-brandGreen/5 rounded-full blur-2xl pointer-events-none" />
             
@@ -667,10 +675,9 @@ export default function Events() {
                 </>
               )}
             </div>
-
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </PortalModal>
 
     </div>
   );

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Home from './pages/ios/Home/Home';
+import FloatingSocials from './components/FloatingSocials';
 const getCurrentSession = async () => null;
 const onAuthChange = (callback) => { if (callback) { /* no-op */ } return { unsubscribe: () => {} }; };
 import { CheckCircle, AlertTriangle, AlertCircle, Info, X } from 'lucide-react';
@@ -214,6 +215,9 @@ export default function App() {
           );
         })}
       </div>
+
+      {/* Floating Sticky Social Media Widget */}
+      <FloatingSocials />
 
       <Home session={session} sessionLoading={sessionLoading} />
     </>

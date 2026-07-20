@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useBodyScrollLock } from '../../../hooks/useBodyScrollLock';
+import PortalModal from '../../../components/PortalModal';
 import {
   Search,
   Calendar as CalendarIcon,
@@ -21,6 +23,7 @@ export default function Announcements({ initialAnnouncementId, onClearInitialAnn
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
+  useBodyScrollLock(!!selectedAnnouncement);
   
   // Notification preference checkboxes
   const [preferences, setPreferences] = useState({
@@ -976,10 +979,9 @@ export default function Announcements({ initialAnnouncementId, onClearInitialAnn
       </section>
 
       {/* ── Detailed Details Modal ── */}
-      {selectedAnnouncement && (
-        <div className="fixed inset-0 bg-navy/70 backdrop-blur-md flex items-center justify-center z-50 px-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-hidden shadow-[0_20px_50px_rgba(2,27,58,0.15)] border border-gray-100 flex flex-col relative animate-in fade-in zoom-in-95 duration-300">
-            
+      <PortalModal isOpen={!!selectedAnnouncement} onClose={() => setSelectedAnnouncement(null)} maxWidth="max-w-lg">
+        {selectedAnnouncement && (
+          <>
             {/* Close button */}
             <button
               onClick={() => setSelectedAnnouncement(null)}
@@ -1002,7 +1004,7 @@ export default function Announcements({ initialAnnouncementId, onClearInitialAnn
             </div>
 
             {/* Modal Body */}
-            <div className="px-6 pb-6 pt-2 overflow-y-auto flex-grow text-left space-y-4 max-h-[calc(90vh-140px)]">
+            <div className="px-6 pb-6 pt-2 overflow-y-auto flex-1 text-left space-y-4">
               <div className="text-xs sm:text-sm text-gray-650 leading-relaxed font-semibold whitespace-pre-line border-t border-gray-100 pt-4">
                 {selectedAnnouncement.details}
               </div>
@@ -1022,10 +1024,9 @@ export default function Announcements({ initialAnnouncementId, onClearInitialAnn
                 {selectedAnnouncement.ctaText}
               </a>
             </div>
-
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </PortalModal>
 
     </div>
   );

@@ -1,4 +1,6 @@
 import { useState, useMemo } from 'react';
+import { useBodyScrollLock } from '../../../hooks/useBodyScrollLock';
+import PortalModal from '../../../components/PortalModal';
 import {
   Search,
   BookOpen,
@@ -28,6 +30,7 @@ export default function Resources({ selectedCategory: externalCategory, setSelec
   const [, setSubscribed] = useState(false);
   const [email, setEmail] = useState('');
   const [showRequestModal, setShowRequestModal] = useState(false);
+  useBodyScrollLock(showRequestModal);
   const [requestSubmitted, setRequestSubmitted] = useState(false);
   const [requestForm, setRequestForm] = useState({ name: '', resourceTitle: '', category: '', notes: '' });
   const [currentPage, setCurrentPage] = useState(1);
@@ -686,102 +689,97 @@ export default function Resources({ selectedCategory: externalCategory, setSelec
       </section>
 
       {/* ── Request Resource Modal ── */}
-      {showRequestModal && (
-        <div className="fixed inset-0 bg-navy/70 backdrop-blur-md flex items-center justify-center z-50 px-4">
-          <div className="bg-white rounded-3xl max-w-md w-full max-h-[90vh] overflow-hidden shadow-[0_20px_50px_rgba(2,27,58,0.15)] border border-gray-100 flex flex-col relative animate-in fade-in zoom-in-95 duration-300">
-            
-            {/* Close button */}
-            <button
-              onClick={() => setShowRequestModal(false)}
-              className="absolute top-5 right-5 p-2 rounded-full hover:bg-gray-100 text-gray-400 hover:text-navy transition-all duration-200 z-20 flex items-center justify-center cursor-pointer"
-            >
-              <ChevronRight className="w-4 h-4 rotate-90" />
-            </button>
+      <PortalModal isOpen={showRequestModal} onClose={() => setShowRequestModal(false)} maxWidth="max-w-md">
+        {/* Close button */}
+        <button
+          onClick={() => setShowRequestModal(false)}
+          className="absolute top-5 right-5 p-2 rounded-full hover:bg-gray-100 text-gray-400 hover:text-navy transition-all duration-200 z-20 flex items-center justify-center cursor-pointer"
+        >
+          <ChevronRight className="w-4 h-4 rotate-90" />
+        </button>
 
-            {/* Modal Header */}
-            <div className="p-6 pb-2 text-left shrink-0">
-              <span className="text-[10px] font-bold text-brandGreen tracking-widest uppercase bg-emerald-500/10 px-2.5 py-1 rounded-full">
-                Suggest Files
-              </span>
-              <h3 className="text-xl font-bold text-navy mt-3">Request a Resource</h3>
-              <p className="text-xs text-gray-400 mt-1 font-semibold leading-relaxed">
-                Tell us what notes, guides, templates, or files you need.
-              </p>
-            </div>
-
-            {/* Modal Body form */}
-            <form onSubmit={handleRequestSubmit} className="px-6 pb-6 pt-2 space-y-4 bg-white overflow-y-auto flex-grow max-h-[calc(90vh-140px)]">
-              
-              {/* Name */}
-              <div className="space-y-1 text-left">
-                <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider">Your Name</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Hammad Ahmed"
-                  required
-                  value={requestForm.name}
-                  onChange={(e) => setRequestForm({ ...requestForm, name: e.target.value })}
-                  className="w-full px-4 py-3 bg-gray-50/50 border border-gray-200/80 rounded-xl text-xs sm:text-sm font-semibold focus:outline-none focus:border-brandGreen focus:bg-white focus:ring-4 focus:ring-emerald-500/5 transition-all duration-200 placeholder:text-gray-300 text-navy"
-                />
-              </div>
-
-              {/* Resource Title */}
-              <div className="space-y-1 text-left">
-                <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider">Resource Title</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Advanced Auditing Checklist"
-                  required
-                  value={requestForm.resourceTitle}
-                  onChange={(e) => setRequestForm({ ...requestForm, resourceTitle: e.target.value })}
-                  className="w-full px-4 py-3 bg-gray-50/50 border border-gray-200/80 rounded-xl text-xs sm:text-sm font-semibold focus:outline-none focus:border-brandGreen focus:bg-white focus:ring-4 focus:ring-emerald-500/5 transition-all duration-200 placeholder:text-gray-300 text-navy"
-                />
-              </div>
-
-              {/* Category selector */}
-              <div className="space-y-1 text-left">
-                <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider">Category</label>
-                <select
-                  required
-                  value={requestForm.category}
-                  onChange={(e) => setRequestForm({ ...requestForm, category: e.target.value })}
-                  className="w-full px-4 py-3 bg-gray-50/50 border border-gray-200/80 rounded-xl text-xs sm:text-sm font-semibold text-navy focus:outline-none focus:border-brandGreen focus:bg-white focus:ring-4 focus:ring-emerald-500/5 transition-all duration-200"
-                >
-                  <option value="" className="text-gray-300">Select a category</option>
-                  <option value="PRC">PRC</option>
-                  <option value="CAF">CAF</option>
-                  <option value="Training/Induction">Training/Induction</option>
-                  <option value="CFAP & SCS (Finals)">CFAP & SCS (Finals)</option>
-                  <option value="CA Qualified">CA Qualified</option>
-                  <option value="ACCA">ACCA</option>
-                </select>
-              </div>
-
-              {/* Notes */}
-              <div className="space-y-1 text-left">
-                <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider">Any Notes / Details</label>
-                <textarea
-                  rows="3"
-                  placeholder="Enter any details about the resource, link, or specific standards needed..."
-                  value={requestForm.notes}
-                  onChange={(e) => setRequestForm({ ...requestForm, notes: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200/80 rounded-xl text-xs sm:text-sm font-semibold focus:outline-none focus:border-brandGreen focus:bg-white focus:ring-4 focus:ring-emerald-500/5 transition-all duration-200 placeholder:text-gray-300 text-navy resize-none"
-                />
-              </div>
-
-              {/* Action Button */}
-              <button
-                type="submit"
-                disabled={requestSubmitted}
-                className="w-full py-3.5 bg-brandGreen hover:bg-brandGreen-dark text-white font-extrabold rounded-xl text-xs sm:text-sm transition-all duration-200 cursor-pointer shadow-lg shadow-emerald-500/10 hover:shadow-emerald-500/20 active:translate-y-0 text-center flex items-center justify-center space-x-2 uppercase tracking-wider"
-              >
-                {requestSubmitted ? 'Submitting...' : 'Submit Request'}
-              </button>
-
-            </form>
-          </div>
+        {/* Modal Header */}
+        <div className="p-6 pb-2 text-left shrink-0">
+          <span className="text-[10px] font-bold text-brandGreen tracking-widest uppercase bg-emerald-500/10 px-2.5 py-1 rounded-full">
+            Suggest Files
+          </span>
+          <h3 className="text-xl font-bold text-navy mt-3">Request a Resource</h3>
+          <p className="text-xs text-gray-400 mt-1 font-semibold leading-relaxed">
+            Tell us what notes, guides, templates, or files you need.
+          </p>
         </div>
-      )}
+
+        {/* Modal Body form */}
+        <form onSubmit={handleRequestSubmit} className="px-6 pb-6 pt-2 space-y-4 bg-white overflow-y-auto flex-1">
+          
+          {/* Name */}
+          <div className="space-y-1 text-left">
+            <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider">Your Name</label>
+            <input
+              type="text"
+              placeholder="e.g. Hammad Ahmed"
+              required
+              value={requestForm.name}
+              onChange={(e) => setRequestForm({ ...requestForm, name: e.target.value })}
+              className="w-full px-4 py-3 bg-gray-50/50 border border-gray-200/80 rounded-xl text-xs sm:text-sm font-semibold focus:outline-none focus:border-brandGreen focus:bg-white focus:ring-4 focus:ring-emerald-500/5 transition-all duration-200 placeholder:text-gray-300 text-navy"
+            />
+          </div>
+
+          {/* Resource Title */}
+          <div className="space-y-1 text-left">
+            <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider">Resource Title</label>
+            <input
+              type="text"
+              placeholder="e.g. Advanced Auditing Checklist"
+              required
+              value={requestForm.resourceTitle}
+              onChange={(e) => setRequestForm({ ...requestForm, resourceTitle: e.target.value })}
+              className="w-full px-4 py-3 bg-gray-50/50 border border-gray-200/80 rounded-xl text-xs sm:text-sm font-semibold focus:outline-none focus:border-brandGreen focus:bg-white focus:ring-4 focus:ring-emerald-500/5 transition-all duration-200 placeholder:text-gray-300 text-navy"
+            />
+          </div>
+
+          {/* Category selector */}
+          <div className="space-y-1 text-left">
+            <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider">Category</label>
+            <select
+              required
+              value={requestForm.category}
+              onChange={(e) => setRequestForm({ ...requestForm, category: e.target.value })}
+              className="w-full px-4 py-3 bg-gray-50/50 border border-gray-200/80 rounded-xl text-xs sm:text-sm font-semibold text-navy focus:outline-none focus:border-brandGreen focus:bg-white focus:ring-4 focus:ring-emerald-500/5 transition-all duration-200"
+            >
+              <option value="" className="text-gray-300">Select a category</option>
+              <option value="PRC">PRC</option>
+              <option value="CAF">CAF</option>
+              <option value="Training/Induction">Training/Induction</option>
+              <option value="CFAP & SCS (Finals)">CFAP & SCS (Finals)</option>
+              <option value="CA Qualified">CA Qualified</option>
+              <option value="ACCA">ACCA</option>
+            </select>
+          </div>
+
+          {/* Notes */}
+          <div className="space-y-1 text-left">
+            <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider">Any Notes / Details</label>
+            <textarea
+              rows="3"
+              placeholder="Enter any details about the resource, link, or specific standards needed..."
+              value={requestForm.notes}
+              onChange={(e) => setRequestForm({ ...requestForm, notes: e.target.value })}
+              className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200/80 rounded-xl text-xs sm:text-sm font-semibold focus:outline-none focus:border-brandGreen focus:bg-white focus:ring-4 focus:ring-emerald-500/5 transition-all duration-200 placeholder:text-gray-300 text-navy resize-none"
+            />
+          </div>
+
+          {/* Action Button */}
+          <button
+            type="submit"
+            disabled={requestSubmitted}
+            className="w-full py-3.5 bg-brandGreen hover:bg-brandGreen-dark text-white font-extrabold rounded-xl text-xs sm:text-sm transition-all duration-200 cursor-pointer shadow-lg shadow-emerald-500/10 hover:shadow-emerald-500/20 active:translate-y-0 text-center flex items-center justify-center space-x-2 uppercase tracking-wider"
+          >
+            {requestSubmitted ? 'Submitting...' : 'Submit Request'}
+          </button>
+
+        </form>
+      </PortalModal>
 
     </div>
   );

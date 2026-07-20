@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useBodyScrollLock } from '../../../hooks/useBodyScrollLock';
+import PortalModal from '../../../components/PortalModal';
 import {
   Briefcase,
   Calendar,
@@ -2603,427 +2605,411 @@ export default function AdminDashboard({ onLogout, currentAdminName = "Ahmad Raz
       {/* ========================================== */}
 
       {/* MODAL: JOBS CRUD */}
-      {isJobModalOpen && (
-        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 max-w-lg w-full space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-              <h3 className="text-base font-black text-[#090C11]">
-                {selectedJob ? 'Edit Placement Details' : 'Publish Placement Opportunity'}
-              </h3>
-              <button onClick={() => setIsJobModalOpen(false)} className="text-gray-400 hover:text-gray-600">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            
-            <form onSubmit={handleJobSubmit} className="space-y-3.5 text-xs">
-              <div className="grid grid-cols-2 gap-3.5">
-                <div className="flex flex-col space-y-1">
-                  <label className="font-bold text-gray-500">Company Name</label>
-                  <input
-                    type="text"
-                    required
-                    value={jobForm.company}
-                    onChange={(e) => setJobForm({ ...jobForm, company: e.target.value })}
-                    className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
-                  />
-                </div>
-                <div className="flex flex-col space-y-1">
-                  <label className="font-bold text-gray-500">Job Title</label>
-                  <input
-                    type="text"
-                    required
-                    value={jobForm.title}
-                    onChange={(e) => setJobForm({ ...jobForm, title: e.target.value })}
-                    className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3.5">
-                <div className="flex flex-col space-y-1">
-                  <label className="font-bold text-gray-500">Location</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. Lahore / Online"
-                    value={jobForm.location}
-                    onChange={(e) => setJobForm({ ...jobForm, location: e.target.value })}
-                    className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
-                  />
-                </div>
-                <div className="flex flex-col space-y-1">
-                  <label className="font-bold text-gray-500">Required Level</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. CA CAF / ACCA Part-Qualified"
-                    value={jobForm.level}
-                    onChange={(e) => setJobForm({ ...jobForm, level: e.target.value })}
-                    className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3.5">
-                <div className="flex flex-col space-y-1">
-                  <label className="font-bold text-gray-500">Placement Type</label>
-                  <select
-                    value={jobForm.job_type}
-                    onChange={(e) => setJobForm({ ...jobForm, job_type: e.target.value })}
-                    className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
-                  >
-                    <option value="Articleship">Articleship / Induction</option>
-                    <option value="Internship">Internship</option>
-                    <option value="Full-time">Full-time Job</option>
-                    <option value="Part-time">Part-time Job</option>
-                  </select>
-                </div>
-                <div className="flex flex-col space-y-1">
-                  <label className="font-bold text-gray-500">Deadline</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. 31 May 2026"
-                    value={jobForm.deadline}
-                    onChange={(e) => setJobForm({ ...jobForm, deadline: e.target.value })}
-                    className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center space-x-2 py-1">
-                <input
-                  type="checkbox"
-                  id="is_overseas"
-                  checked={jobForm.is_overseas}
-                  onChange={(e) => setJobForm({ ...jobForm, is_overseas: e.target.checked })}
-                  className="rounded text-brandGreen focus:ring-brandGreen"
-                />
-                <label htmlFor="is_overseas" className="font-bold text-gray-500 select-none">This is an international/overseas listing</label>
-              </div>
-
-              <div className="flex flex-col space-y-1">
-                <label className="font-bold text-gray-500">Job Description</label>
-                <textarea
-                  required
-                  rows="3"
-                  value={jobForm.description}
-                  onChange={(e) => setJobForm({ ...jobForm, description: e.target.value })}
-                  className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
-                />
-              </div>
-
-              <div className="flex flex-col space-y-1">
-                <label className="font-bold text-gray-500">Key Requirements (Comma-separated)</label>
-                <input
-                  type="text"
-                  placeholder="CA Qualified, 1 year experience, Strong analytical skills"
-                  value={jobForm.requirements}
-                  onChange={(e) => setJobForm({ ...jobForm, requirements: e.target.value })}
-                  className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="w-full py-3 bg-brandGreen hover:bg-brandGreen-dark text-white font-black rounded-xl shadow-md transition-all active:scale-95 mt-2 text-center"
-              >
-                {selectedJob ? 'Save Changes' : 'Publish Opportunity'}
-              </button>
-            </form>
-          </div>
+      <PortalModal isOpen={isJobModalOpen} onClose={() => setIsJobModalOpen(false)} maxWidth="max-w-lg" className="p-6 space-y-4">
+        <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+          <h3 className="text-base font-black text-[#090C11]">
+            {selectedJob ? 'Edit Placement Details' : 'Publish Placement Opportunity'}
+          </h3>
+          <button onClick={() => setIsJobModalOpen(false)} className="text-gray-400 hover:text-gray-600">
+            <X className="w-5 h-5" />
+          </button>
         </div>
-      )}
+        
+        <form onSubmit={handleJobSubmit} className="space-y-3.5 text-xs">
+          <div className="grid grid-cols-2 gap-3.5">
+            <div className="flex flex-col space-y-1">
+              <label className="font-bold text-gray-500">Company Name</label>
+              <input
+                type="text"
+                required
+                value={jobForm.company}
+                onChange={(e) => setJobForm({ ...jobForm, company: e.target.value })}
+                className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+              />
+            </div>
+            <div className="flex flex-col space-y-1">
+              <label className="font-bold text-gray-500">Job Title</label>
+              <input
+                type="text"
+                required
+                value={jobForm.title}
+                onChange={(e) => setJobForm({ ...jobForm, title: e.target.value })}
+                className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3.5">
+            <div className="flex flex-col space-y-1">
+              <label className="font-bold text-gray-500">Location</label>
+              <input
+                type="text"
+                required
+                placeholder="e.g. Lahore / Online"
+                value={jobForm.location}
+                onChange={(e) => setJobForm({ ...jobForm, location: e.target.value })}
+                className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+              />
+            </div>
+            <div className="flex flex-col space-y-1">
+              <label className="font-bold text-gray-500">Required Level</label>
+              <input
+                type="text"
+                required
+                placeholder="e.g. CA CAF / ACCA Part-Qualified"
+                value={jobForm.level}
+                onChange={(e) => setJobForm({ ...jobForm, level: e.target.value })}
+                className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3.5">
+            <div className="flex flex-col space-y-1">
+              <label className="font-bold text-gray-500">Placement Type</label>
+              <select
+                value={jobForm.job_type}
+                onChange={(e) => setJobForm({ ...jobForm, job_type: e.target.value })}
+                className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+              >
+                <option value="Articleship">Articleship / Induction</option>
+                <option value="Internship">Internship</option>
+                <option value="Full-time">Full-time Job</option>
+                <option value="Part-time">Part-time Job</option>
+              </select>
+            </div>
+            <div className="flex flex-col space-y-1">
+              <label className="font-bold text-gray-500">Deadline</label>
+              <input
+                type="text"
+                required
+                placeholder="e.g. 31 May 2026"
+                value={jobForm.deadline}
+                onChange={(e) => setJobForm({ ...jobForm, deadline: e.target.value })}
+                className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-2 py-1">
+            <input
+              type="checkbox"
+              id="is_overseas"
+              checked={jobForm.is_overseas}
+              onChange={(e) => setJobForm({ ...jobForm, is_overseas: e.target.checked })}
+              className="rounded text-brandGreen focus:ring-brandGreen"
+            />
+            <label htmlFor="is_overseas" className="font-bold text-gray-500 select-none">This is an international/overseas listing</label>
+          </div>
+
+          <div className="flex flex-col space-y-1">
+            <label className="font-bold text-gray-500">Job Description</label>
+            <textarea
+              required
+              rows="3"
+              value={jobForm.description}
+              onChange={(e) => setJobForm({ ...jobForm, description: e.target.value })}
+              className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+            />
+          </div>
+
+          <div className="flex flex-col space-y-1">
+            <label className="font-bold text-gray-500">Key Requirements (Comma-separated)</label>
+            <input
+              type="text"
+              placeholder="CA Qualified, 1 year experience, Strong analytical skills"
+              value={jobForm.requirements}
+              onChange={(e) => setJobForm({ ...jobForm, requirements: e.target.value })}
+              className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full py-3 bg-brandGreen hover:bg-brandGreen-dark text-white font-black rounded-xl shadow-md transition-all active:scale-95 mt-2 text-center"
+          >
+            {selectedJob ? 'Save Changes' : 'Publish Opportunity'}
+          </button>
+        </form>
+      </PortalModal>
 
       {/* MODAL: RESOURCES CRUD */}
-      {isResourceModalOpen && (
-        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 max-w-lg w-full space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-              <h3 className="text-base font-black text-[#090C11]">
-                {selectedResource ? 'Edit Resource' : 'Add New Study Resource'}
-              </h3>
-              <button onClick={() => setIsResourceModalOpen(false)} className="text-gray-400 hover:text-gray-600">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            
-            <form onSubmit={handleResourceSubmit} className="space-y-3.5 text-xs">
-              <div className="flex flex-col space-y-1">
-                <label className="font-bold text-gray-500">Resource Title</label>
-                <input
-                  type="text"
-                  required
-                  value={resourceForm.title}
-                  onChange={(e) => setResourceForm({ ...resourceForm, title: e.target.value })}
-                  className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3.5">
-                <div className="flex flex-col space-y-1">
-                  <label className="font-bold text-gray-500">Category</label>
-                  <select
-                    value={resourceForm.category}
-                    onChange={(e) => setResourceForm({ ...resourceForm, category: e.target.value })}
-                    className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
-                  >
-                    <option value="PRC">PRC</option>
-                    <option value="CAF">CAF</option>
-                    <option value="Training/Induction">Training/Induction</option>
-                    <option value="CFAP & SCS (Finals)">CFAP & SCS (Finals)</option>
-                    <option value="CA Qualified">CA Qualified</option>
-                    <option value="ACCA">ACCA</option>
-                  </select>
-                </div>
-                <div className="flex flex-col space-y-1">
-                  <label className="font-bold text-gray-500">File Type</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. PDF"
-                    value={resourceForm.type}
-                    onChange={(e) => setResourceForm({ ...resourceForm, type: e.target.value })}
-                    className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3.5">
-                <div className="flex flex-col space-y-1">
-                  <label className="font-bold text-gray-500">Tag Label</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Notes / CV"
-                    value={resourceForm.tag}
-                    onChange={(e) => setResourceForm({ ...resourceForm, tag: e.target.value })}
-                    className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
-                  />
-                </div>
-                <div className="flex flex-col space-y-1">
-                  <label className="font-bold text-gray-500">Download Link URL</label>
-                  <input
-                    type="text"
-                    placeholder="https://example.com/file.pdf"
-                    value={resourceForm.download_url}
-                    onChange={(e) => setResourceForm({ ...resourceForm, download_url: e.target.value })}
-                    className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col space-y-1">
-                <label className="font-bold text-gray-500">Description</label>
-                <textarea
-                  rows="2"
-                  value={resourceForm.description}
-                  onChange={(e) => setResourceForm({ ...resourceForm, description: e.target.value })}
-                  className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
-                />
-              </div>
-
-              <div className="flex items-center space-x-2 py-2">
-                <input
-                  type="checkbox"
-                  id="is_featured"
-                  checked={resourceForm.is_featured}
-                  onChange={(e) => setResourceForm({ ...resourceForm, is_featured: e.target.checked })}
-                  className="rounded text-brandGreen focus:ring-brandGreen"
-                />
-                <label htmlFor="is_featured" className="font-bold text-gray-500 select-none">Feature this resource on the main page</label>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full py-3 bg-brandGreen hover:bg-brandGreen-dark text-white font-black rounded-xl shadow-md transition-all active:scale-95 mt-2 text-center"
-              >
-                {selectedResource ? 'Save Changes' : 'Upload Resource'}
-              </button>
-            </form>
-          </div>
+      <PortalModal isOpen={isResourceModalOpen} onClose={() => setIsResourceModalOpen(false)} maxWidth="max-w-lg" className="p-6 space-y-4">
+        <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+          <h3 className="text-base font-black text-[#090C11]">
+            {selectedResource ? 'Edit Resource' : 'Add New Study Resource'}
+          </h3>
+          <button onClick={() => setIsResourceModalOpen(false)} className="text-gray-400 hover:text-gray-600">
+            <X className="w-5 h-5" />
+          </button>
         </div>
-      )}
+        
+        <form onSubmit={handleResourceSubmit} className="space-y-3.5 text-xs">
+          <div className="flex flex-col space-y-1">
+            <label className="font-bold text-gray-500">Resource Title</label>
+            <input
+              type="text"
+              required
+              value={resourceForm.title}
+              onChange={(e) => setResourceForm({ ...resourceForm, title: e.target.value })}
+              className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3.5">
+            <div className="flex flex-col space-y-1">
+              <label className="font-bold text-gray-500">Category</label>
+              <select
+                value={resourceForm.category}
+                onChange={(e) => setResourceForm({ ...resourceForm, category: e.target.value })}
+                className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+              >
+                <option value="PRC">PRC</option>
+                <option value="CAF">CAF</option>
+                <option value="Training/Induction">Training/Induction</option>
+                <option value="CFAP & SCS (Finals)">CFAP & SCS (Finals)</option>
+                <option value="CA Qualified">CA Qualified</option>
+                <option value="ACCA">ACCA</option>
+              </select>
+            </div>
+            <div className="flex flex-col space-y-1">
+              <label className="font-bold text-gray-500">File Type</label>
+              <input
+                type="text"
+                required
+                placeholder="e.g. PDF"
+                value={resourceForm.type}
+                onChange={(e) => setResourceForm({ ...resourceForm, type: e.target.value })}
+                className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3.5">
+            <div className="flex flex-col space-y-1">
+              <label className="font-bold text-gray-500">Tag Label</label>
+              <input
+                type="text"
+                placeholder="e.g. Notes / CV"
+                value={resourceForm.tag}
+                onChange={(e) => setResourceForm({ ...resourceForm, tag: e.target.value })}
+                className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+              />
+            </div>
+            <div className="flex flex-col space-y-1">
+              <label className="font-bold text-gray-500">Download Link URL</label>
+              <input
+                type="text"
+                placeholder="https://example.com/file.pdf"
+                value={resourceForm.download_url}
+                onChange={(e) => setResourceForm({ ...resourceForm, download_url: e.target.value })}
+                className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col space-y-1">
+            <label className="font-bold text-gray-500">Description</label>
+            <textarea
+              rows="2"
+              value={resourceForm.description}
+              onChange={(e) => setResourceForm({ ...resourceForm, description: e.target.value })}
+              className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+            />
+          </div>
+
+          <div className="flex items-center space-x-2 py-2">
+            <input
+              type="checkbox"
+              id="is_featured"
+              checked={resourceForm.is_featured}
+              onChange={(e) => setResourceForm({ ...resourceForm, is_featured: e.target.checked })}
+              className="rounded text-brandGreen focus:ring-brandGreen"
+            />
+            <label htmlFor="is_featured" className="font-bold text-gray-500 select-none">Feature this resource on the main page</label>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full py-3 bg-brandGreen hover:bg-brandGreen-dark text-white font-black rounded-xl shadow-md transition-all active:scale-95 mt-2 text-center"
+          >
+            {selectedResource ? 'Save Changes' : 'Upload Resource'}
+          </button>
+        </form>
+      </PortalModal>
 
       {/* MODAL: ANNOUNCEMENTS CRUD */}
-      {isAnnouncementModalOpen && (
-        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 max-w-lg w-full space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-              <h3 className="text-base font-black text-[#090C11]">
-                {selectedAnnouncement ? 'Edit Announcement/Event' : 'Publish Announcement/Event'}
-              </h3>
-              <button onClick={() => setIsAnnouncementModalOpen(false)} className="text-gray-400 hover:text-gray-600">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            
-            <form onSubmit={handleAnnouncementSubmit} className="space-y-3.5 text-xs">
-              <div className="flex flex-col space-y-1">
-                <label className="font-bold text-gray-500">Title</label>
-                <input
-                  type="text"
-                  required
-                  value={announcementForm.title}
-                  onChange={(e) => setAnnouncementForm({ ...announcementForm, title: e.target.value })}
-                  className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3.5">
-                <div className="flex flex-col space-y-1">
-                  <label className="font-bold text-gray-500">Category</label>
-                  <select
-                    value={announcementForm.category}
-                    onChange={(e) => setAnnouncementForm({ ...announcementForm, category: e.target.value })}
-                    className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
-                  >
-                    <option value="General">General</option>
-                    <option value="Alert">Alert</option>
-                    <option value="Event">Event</option>
-                    <option value="News">News</option>
-                  </select>
-                </div>
-                <div className="flex flex-col space-y-1">
-                  <label className="font-bold text-gray-500">Event Date Badge (e.g. "20 MAY")</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. 20 MAY"
-                    value={announcementForm.event_date}
-                    onChange={(e) => setAnnouncementForm({ ...announcementForm, event_date: e.target.value })}
-                    className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col space-y-1">
-                <label className="font-bold text-gray-500">Short Summary</label>
-                <input
-                  type="text"
-                  required
-                  value={announcementForm.summary}
-                  onChange={(e) => setAnnouncementForm({ ...announcementForm, summary: e.target.value })}
-                  className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
-                />
-              </div>
-
-              <div className="flex flex-col space-y-1">
-                <label className="font-bold text-gray-500">Full Content Text</label>
-                <textarea
-                  rows="3"
-                  value={announcementForm.content}
-                  onChange={(e) => setAnnouncementForm({ ...announcementForm, content: e.target.value })}
-                  className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="w-full py-3 bg-brandGreen hover:bg-brandGreen-dark text-white font-black rounded-xl shadow-md transition-all active:scale-95 mt-2 text-center"
-              >
-                {selectedAnnouncement ? 'Save Changes' : 'Publish Announcement'}
-              </button>
-            </form>
-          </div>
+      <PortalModal isOpen={isAnnouncementModalOpen} onClose={() => setIsAnnouncementModalOpen(false)} maxWidth="max-w-lg" className="p-6 space-y-4">
+        <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+          <h3 className="text-base font-black text-[#090C11]">
+            {selectedAnnouncement ? 'Edit Announcement/Event' : 'Publish Announcement/Event'}
+          </h3>
+          <button onClick={() => setIsAnnouncementModalOpen(false)} className="text-gray-400 hover:text-gray-600">
+            <X className="w-5 h-5" />
+          </button>
         </div>
-      )}
+        
+        <form onSubmit={handleAnnouncementSubmit} className="space-y-3.5 text-xs">
+          <div className="flex flex-col space-y-1">
+            <label className="font-bold text-gray-500">Title</label>
+            <input
+              type="text"
+              required
+              value={announcementForm.title}
+              onChange={(e) => setAnnouncementForm({ ...announcementForm, title: e.target.value })}
+              className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3.5">
+            <div className="flex flex-col space-y-1">
+              <label className="font-bold text-gray-500">Category</label>
+              <select
+                value={announcementForm.category}
+                onChange={(e) => setAnnouncementForm({ ...announcementForm, category: e.target.value })}
+                className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+              >
+                <option value="General">General</option>
+                <option value="Alert">Alert</option>
+                <option value="Event">Event</option>
+                <option value="News">News</option>
+              </select>
+            </div>
+            <div className="flex flex-col space-y-1">
+              <label className="font-bold text-gray-500">Event Date Badge (e.g. "20 MAY")</label>
+              <input
+                type="text"
+                placeholder="e.g. 20 MAY"
+                value={announcementForm.event_date}
+                onChange={(e) => setAnnouncementForm({ ...announcementForm, event_date: e.target.value })}
+                className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col space-y-1">
+            <label className="font-bold text-gray-500">Short Summary</label>
+            <input
+              type="text"
+              required
+              value={announcementForm.summary}
+              onChange={(e) => setAnnouncementForm({ ...announcementForm, summary: e.target.value })}
+              className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+            />
+          </div>
+
+          <div className="flex flex-col space-y-1">
+            <label className="font-bold text-gray-500">Full Content Text</label>
+            <textarea
+              rows="3"
+              value={announcementForm.content}
+              onChange={(e) => setAnnouncementForm({ ...announcementForm, content: e.target.value })}
+              className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full py-3 bg-brandGreen hover:bg-brandGreen-dark text-white font-black rounded-xl shadow-md transition-all active:scale-95 mt-2 text-center"
+          >
+            {selectedAnnouncement ? 'Save Changes' : 'Publish Announcement'}
+          </button>
+        </form>
+      </PortalModal>
 
       {/* MODAL: COMMUNITY CRUD */}
-      {isCommunityModalOpen && (
-        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 max-w-lg w-full space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-              <h3 className="text-base font-black text-[#090C11]">
-                {selectedCommunity ? 'Edit Study Group' : 'Add Study Group Room'}
-              </h3>
-              <button onClick={() => setIsCommunityModalOpen(false)} className="text-gray-400 hover:text-gray-600">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            
-            <form onSubmit={handleCommunitySubmit} className="space-y-3.5 text-xs">
-              <div className="flex flex-col space-y-1">
-                <label className="font-bold text-gray-500">Study Group Title</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. CAF Intermediate Group"
-                  value={communityForm.title}
-                  onChange={(e) => setCommunityForm({ ...communityForm, title: e.target.value })}
-                  className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3.5">
-                <div className="flex flex-col space-y-1">
-                  <label className="font-bold text-gray-500">Category Key</label>
-                  <select
-                    value={communityForm.category_key}
-                    onChange={(e) => setCommunityForm({ ...communityForm, category_key: e.target.value })}
-                    className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
-                  >
-                    <option value="prc">PRC (Entry Level)</option>
-                    <option value="caf">CAF (Intermediate)</option>
-                    <option value="cfap">CFAP & SCS (Finals)</option>
-                    <option value="acca">ACCA</option>
-                  </select>
-                </div>
-                <div className="flex flex-col space-y-1">
-                  <label className="font-bold text-gray-500">Members Count Text</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. 1,500+ Members"
-                    value={communityForm.members_count_text}
-                    onChange={(e) => setCommunityForm({ ...communityForm, members_count_text: e.target.value })}
-                    className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3.5">
-                <div className="flex flex-col space-y-1">
-                  <label className="font-bold text-gray-500">WhatsApp Link URL</label>
-                  <input
-                    type="text"
-                    placeholder="https://chat.whatsapp.com/..."
-                    value={communityForm.whatsapp_link}
-                    onChange={(e) => setCommunityForm({ ...communityForm, whatsapp_link: e.target.value })}
-                    className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
-                  />
-                </div>
-                <div className="flex flex-col space-y-1">
-                  <label className="font-bold text-gray-500">Discord Link URL</label>
-                  <input
-                    type="text"
-                    placeholder="https://discord.gg/..."
-                    value={communityForm.discord_link}
-                    onChange={(e) => setCommunityForm({ ...communityForm, discord_link: e.target.value })}
-                    className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col space-y-1">
-                <label className="font-bold text-gray-500">Description</label>
-                <textarea
-                  required
-                  rows="3"
-                  value={communityForm.description}
-                  onChange={(e) => setCommunityForm({ ...communityForm, description: e.target.value })}
-                  className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="w-full py-3 bg-brandGreen hover:bg-brandGreen-dark text-white font-black rounded-xl shadow-md transition-all active:scale-95 mt-2 text-center"
-              >
-                {selectedCommunity ? 'Save Changes' : 'Publish Study Group'}
-              </button>
-            </form>
-          </div>
+      <PortalModal isOpen={isCommunityModalOpen} onClose={() => setIsCommunityModalOpen(false)} maxWidth="max-w-lg" className="p-6 space-y-4">
+        <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+          <h3 className="text-base font-black text-[#090C11]">
+            {selectedCommunity ? 'Edit Study Group' : 'Add Study Group Room'}
+          </h3>
+          <button onClick={() => setIsCommunityModalOpen(false)} className="text-gray-400 hover:text-gray-600">
+            <X className="w-5 h-5" />
+          </button>
         </div>
-      )}
+        
+        <form onSubmit={handleCommunitySubmit} className="space-y-3.5 text-xs">
+          <div className="flex flex-col space-y-1">
+            <label className="font-bold text-gray-500">Study Group Title</label>
+            <input
+              type="text"
+              required
+              placeholder="e.g. CAF Intermediate Group"
+              value={communityForm.title}
+              onChange={(e) => setCommunityForm({ ...communityForm, title: e.target.value })}
+              className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3.5">
+            <div className="flex flex-col space-y-1">
+              <label className="font-bold text-gray-500">Category Key</label>
+              <select
+                value={communityForm.category_key}
+                onChange={(e) => setCommunityForm({ ...communityForm, category_key: e.target.value })}
+                className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+              >
+                <option value="prc">PRC (Entry Level)</option>
+                <option value="caf">CAF (Intermediate)</option>
+                <option value="cfap">CFAP & SCS (Finals)</option>
+                <option value="acca">ACCA</option>
+              </select>
+            </div>
+            <div className="flex flex-col space-y-1">
+              <label className="font-bold text-gray-500">Members Count Text</label>
+              <input
+                type="text"
+                required
+                placeholder="e.g. 1,500+ Members"
+                value={communityForm.members_count_text}
+                onChange={(e) => setCommunityForm({ ...communityForm, members_count_text: e.target.value })}
+                className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3.5">
+            <div className="flex flex-col space-y-1">
+              <label className="font-bold text-gray-500">WhatsApp Link URL</label>
+              <input
+                type="text"
+                placeholder="https://chat.whatsapp.com/..."
+                value={communityForm.whatsapp_link}
+                onChange={(e) => setCommunityForm({ ...communityForm, whatsapp_link: e.target.value })}
+                className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+              />
+            </div>
+            <div className="flex flex-col space-y-1">
+              <label className="font-bold text-gray-500">Discord Link URL</label>
+              <input
+                type="text"
+                placeholder="https://discord.gg/..."
+                value={communityForm.discord_link}
+                onChange={(e) => setCommunityForm({ ...communityForm, discord_link: e.target.value })}
+                className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col space-y-1">
+            <label className="font-bold text-gray-500">Description</label>
+            <textarea
+              required
+              rows="3"
+              value={communityForm.description}
+              onChange={(e) => setCommunityForm({ ...communityForm, description: e.target.value })}
+              className="p-2.5 border border-gray-100 bg-[#F8F9FB] rounded-lg focus:outline-none focus:border-brandGreen"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full py-3 bg-[#00C853] text-white font-extrabold rounded-xl text-xs hover:bg-[#00B248] transition-colors cursor-pointer shadow-md shadow-emerald-500/20"
+          >
+            {selectedCommunity ? 'Save Changes' : 'Publish Study Group'}
+          </button>
+        </form>
+      </PortalModal>
 
       {/* MODAL: VIDEO & PODCAST CRUD */}
       {isVideoModalOpen && (
@@ -3208,9 +3194,17 @@ export default function AdminDashboard({ onLogout, currentAdminName = "Ahmad Raz
       )}
 
       {/* MODAL: ANSWER STUDENT CAREER QUERY */}
-      {replyModalOpen && selectedMessageForReply && (
-        <div className="fixed inset-0 bg-black/60 z-[99] flex items-center justify-center p-4 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-white rounded-3xl p-6 max-w-lg w-full space-y-4 shadow-2xl relative text-left">
+      <PortalModal
+        isOpen={replyModalOpen && !!selectedMessageForReply}
+        onClose={() => {
+          setSelectedMessageForReply(null);
+          setReplyModalOpen(false);
+        }}
+        maxWidth="max-w-lg"
+        className="p-6 space-y-4 text-left"
+      >
+        {selectedMessageForReply && (
+          <>
             <button
               onClick={() => {
                 setSelectedMessageForReply(null);
@@ -3274,9 +3268,9 @@ export default function AdminDashboard({ onLogout, currentAdminName = "Ahmad Raz
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </PortalModal>
 
     </div>
   );

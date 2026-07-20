@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useBodyScrollLock } from '../../../hooks/useBodyScrollLock';
+import PortalModal from '../../../components/PortalModal';
 import {
   Users,
   FileText,
@@ -183,6 +185,7 @@ export default function Counseling() {
   });
   const [submitted, setSubmitted] = useState(false);
   const [selectedServiceForDetail, setSelectedServiceForDetail] = useState(null);
+  useBodyScrollLock(isModalOpen || !!selectedServiceForDetail);
 
   const openModal = (type, serviceTitle = '') => {
     setModalType(type);
@@ -725,130 +728,124 @@ export default function Counseling() {
       </section>
 
       {/* 9. Booking / Query Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-navy/70 backdrop-blur-md flex items-center justify-center z-50 px-4">
-          <div className="bg-white rounded-3xl max-w-md w-full max-h-[90vh] overflow-hidden shadow-[0_20px_50px_rgba(2,27,58,0.15)] border border-gray-100 flex flex-col relative animate-in fade-in zoom-in-95 duration-300">
-            
-            {/* Minimalist Close Button */}
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-5 right-5 p-2 rounded-full hover:bg-gray-100 text-gray-400 hover:text-navy transition-all duration-200 z-20 flex items-center justify-center cursor-pointer"
-            >
-              <X className="w-4 h-4" />
-            </button>
+      <PortalModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} maxWidth="max-w-md">
+        {/* Minimalist Close Button */}
+        <button
+          onClick={() => setIsModalOpen(false)}
+          className="absolute top-5 right-5 p-2 rounded-full hover:bg-gray-100 text-gray-400 hover:text-navy transition-all duration-200 z-20 flex items-center justify-center cursor-pointer"
+        >
+          <X className="w-4 h-4" />
+        </button>
 
-            {/* Modal Header - Clean & Minimalist */}
-            <div className="p-6 pb-2 text-left shrink-0">
-              <span className="text-[10px] font-bold text-brandGreen tracking-widest uppercase bg-emerald-500/10 px-2.5 py-1 rounded-full">
-                {modalType === 'book' ? 'Free Mentorship' : 'Q&A Support'}
-              </span>
-              <h3 className="text-xl font-bold text-navy mt-3">
-                {modalType === 'book' ? 'Book a Counseling Session' : 'Ask a Career Question'}
-              </h3>
-              <p className="text-xs text-gray-400 mt-1 font-medium leading-relaxed">
-                {selectedService ? `Category: ${selectedService}` : 'Get personalized career guidance from CA & ACCA experts.'}
-              </p>
-            </div>
-
-            {/* Modal Body - Clean scrollable form */}
-            <form onSubmit={handleFormSubmit} className="px-6 pb-6 pt-2 space-y-4 bg-white overflow-y-auto flex-grow max-h-[calc(90vh-140px)]">
-              
-              {/* Name Input */}
-              <div className="space-y-1 text-left">
-                <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider">Full Name</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Usama Khan"
-                  required
-                  value={formState.name}
-                  onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-                  className="w-full px-4 py-3 bg-gray-50/50 border border-gray-200/80 rounded-xl text-xs sm:text-sm font-semibold focus:outline-none focus:border-brandGreen focus:bg-white focus:ring-4 focus:ring-emerald-500/5 transition-all duration-200 placeholder:text-gray-300 text-navy"
-                />
-              </div>
-
-              {/* Email Input */}
-              <div className="space-y-1 text-left">
-                <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider">Email Address</label>
-                <input
-                  type="email"
-                  placeholder="e.g. usama@example.com"
-                  required
-                  value={formState.email}
-                  onChange={(e) => setFormState({ ...formState, email: e.target.value })}
-                  className="w-full px-4 py-3 bg-gray-50/50 border border-gray-200/80 rounded-xl text-xs sm:text-sm font-semibold focus:outline-none focus:border-brandGreen focus:bg-white focus:ring-4 focus:ring-emerald-500/5 transition-all duration-200 placeholder:text-gray-300 text-navy"
-                />
-              </div>
-
-              {/* Level select */}
-              <div className="space-y-1 text-left">
-                <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider">Qualification Level</label>
-                <div className="relative">
-                  <select
-                    required
-                    value={formState.level}
-                    onChange={(e) => setFormState({ ...formState, level: e.target.value })}
-                    className="w-full px-4 pr-10 py-3 bg-gray-50/50 border border-gray-200/80 rounded-xl text-xs sm:text-sm font-semibold text-navy focus:outline-none focus:border-brandGreen focus:bg-white focus:ring-4 focus:ring-emerald-500/5 transition-all duration-200 appearance-none"
-                  >
-                    <option value="" className="text-gray-300">Select qualification level</option>
-                    <option value="PRC">PRC / Entry Level</option>
-                    <option value="CA Intermediate">CA Intermediate (CAF)</option>
-                    <option value="CA Finalist">CA Finalist (CFAP)</option>
-                    <option value="ACCA Student">ACCA Student</option>
-                    <option value="Qualified">Qualified CA/ACCA</option>
-                  </select>
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none flex items-center justify-center">
-                    <ChevronDown className="w-4 h-4" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Message Input */}
-              <div className="space-y-1 text-left">
-                <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider">
-                  {modalType === 'book' ? 'Topic Details' : 'Describe your query'}
-                </label>
-                <textarea
-                  rows="3"
-                  required
-                  placeholder={modalType === 'book' ? 'What specific goals or challenges would you like to discuss?' : 'Write your question in detail...'}
-                  value={formState.message}
-                  onChange={(e) => setFormState({ ...formState, message: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200/80 rounded-xl text-xs sm:text-sm font-semibold focus:outline-none focus:border-brandGreen focus:bg-white focus:ring-4 focus:ring-emerald-500/5 transition-all duration-200 placeholder:text-gray-300 text-navy resize-none"
-                />
-              </div>
-
-              {/* Secure Notice */}
-              <div className="flex items-center space-x-2 text-[10px] text-gray-400 font-bold py-2 px-3 bg-emerald-500/5 rounded-xl border border-brandGreen/10 text-left">
-                <ShieldCheck className="w-4 h-4 text-brandGreen flex-shrink-0" />
-                <span>100% Free guidance. Your data is kept private.</span>
-              </div>
-
-              {/* Action Button */}
-              <button
-                type="submit"
-                disabled={submitted}
-                className="w-full py-3.5 bg-brandGreen hover:bg-brandGreen-dark text-white font-extrabold rounded-xl text-xs sm:text-sm transition-all duration-200 cursor-pointer shadow-lg shadow-emerald-500/10 hover:shadow-emerald-500/20 active:translate-y-0 text-center flex items-center justify-center space-x-2 uppercase tracking-wider"
-              >
-                {submitted ? (
-                  <span>Submitting...</span>
-                ) : (
-                  <>
-                    <Calendar className="w-4 h-4" />
-                    <span>{modalType === 'book' ? 'Confirm Booking Slot' : 'Submit My Query'}</span>
-                  </>
-                )}
-              </button>
-
-            </form>
-          </div>
+        {/* Modal Header - Clean & Minimalist */}
+        <div className="p-6 pb-2 text-left shrink-0">
+          <span className="text-[10px] font-bold text-brandGreen tracking-widest uppercase bg-emerald-500/10 px-2.5 py-1 rounded-full">
+            {modalType === 'book' ? 'Free Mentorship' : 'Q&A Support'}
+          </span>
+          <h3 className="text-xl font-bold text-navy mt-3">
+            {modalType === 'book' ? 'Book a Counseling Session' : 'Ask a Career Question'}
+          </h3>
+          <p className="text-xs text-gray-400 mt-1 font-medium leading-relaxed">
+            {selectedService ? `Category: ${selectedService}` : 'Get personalized career guidance from CA & ACCA experts.'}
+          </p>
         </div>
-      )}
+
+        {/* Modal Body - Clean scrollable form */}
+        <form onSubmit={handleFormSubmit} className="px-6 pb-6 pt-2 space-y-4 bg-white overflow-y-auto flex-1">
+          
+          {/* Name Input */}
+          <div className="space-y-1 text-left">
+            <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider">Full Name</label>
+            <input
+              type="text"
+              placeholder="e.g. Usama Khan"
+              required
+              value={formState.name}
+              onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+              className="w-full px-4 py-3 bg-gray-50/50 border border-gray-200/80 rounded-xl text-xs sm:text-sm font-semibold focus:outline-none focus:border-brandGreen focus:bg-white focus:ring-4 focus:ring-emerald-500/5 transition-all duration-200 placeholder:text-gray-300 text-navy"
+            />
+          </div>
+
+          {/* Email Input */}
+          <div className="space-y-1 text-left">
+            <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider">Email Address</label>
+            <input
+              type="email"
+              placeholder="e.g. usama@example.com"
+              required
+              value={formState.email}
+              onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+              className="w-full px-4 py-3 bg-gray-50/50 border border-gray-200/80 rounded-xl text-xs sm:text-sm font-semibold focus:outline-none focus:border-brandGreen focus:bg-white focus:ring-4 focus:ring-emerald-500/5 transition-all duration-200 placeholder:text-gray-300 text-navy"
+            />
+          </div>
+
+          {/* Level select */}
+          <div className="space-y-1 text-left">
+            <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider">Qualification Level</label>
+            <div className="relative">
+              <select
+                required
+                value={formState.level}
+                onChange={(e) => setFormState({ ...formState, level: e.target.value })}
+                className="w-full px-4 pr-10 py-3 bg-gray-50/50 border border-gray-200/80 rounded-xl text-xs sm:text-sm font-semibold text-navy focus:outline-none focus:border-brandGreen focus:bg-white focus:ring-4 focus:ring-emerald-500/5 transition-all duration-200 appearance-none"
+              >
+                <option value="" className="text-gray-300">Select qualification level</option>
+                <option value="PRC">PRC / Entry Level</option>
+                <option value="CA Intermediate">CA Intermediate (CAF)</option>
+                <option value="CA Finalist">CA Finalist (CFAP)</option>
+                <option value="ACCA Student">ACCA Student</option>
+                <option value="Qualified">Qualified CA/ACCA</option>
+              </select>
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none flex items-center justify-center">
+                <ChevronDown className="w-4 h-4" />
+              </div>
+            </div>
+          </div>
+
+          {/* Message Input */}
+          <div className="space-y-1 text-left">
+            <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider">
+              {modalType === 'book' ? 'Topic Details' : 'Describe your query'}
+            </label>
+            <textarea
+              rows="3"
+              required
+              placeholder={modalType === 'book' ? 'What specific goals or challenges would you like to discuss?' : 'Write your question in detail...'}
+              value={formState.message}
+              onChange={(e) => setFormState({ ...formState, message: e.target.value })}
+              className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200/80 rounded-xl text-xs sm:text-sm font-semibold focus:outline-none focus:border-brandGreen focus:bg-white focus:ring-4 focus:ring-emerald-500/5 transition-all duration-200 placeholder:text-gray-300 text-navy resize-none"
+            />
+          </div>
+
+          {/* Secure Notice */}
+          <div className="flex items-center space-x-2 text-[10px] text-gray-400 font-bold py-2 px-3 bg-emerald-500/5 rounded-xl border border-brandGreen/10 text-left">
+            <ShieldCheck className="w-4 h-4 text-brandGreen flex-shrink-0" />
+            <span>100% Free guidance. Your data is kept private.</span>
+          </div>
+
+          {/* Action Button */}
+          <button
+            type="submit"
+            disabled={submitted}
+            className="w-full py-3.5 bg-brandGreen hover:bg-brandGreen-dark text-white font-extrabold rounded-xl text-xs sm:text-sm transition-all duration-200 cursor-pointer shadow-lg shadow-emerald-500/10 hover:shadow-emerald-500/20 active:translate-y-0 text-center flex items-center justify-center space-x-2 uppercase tracking-wider"
+          >
+            {submitted ? (
+              <span>Submitting...</span>
+            ) : (
+              <>
+                <Calendar className="w-4 h-4" />
+                <span>{modalType === 'book' ? 'Confirm Booking Slot' : 'Submit My Query'}</span>
+              </>
+            )}
+          </button>
+
+        </form>
+      </PortalModal>
 
       {/* 10. Service Details Modal Popup */}
-      {selectedServiceForDetail && (
-        <div className="fixed inset-0 bg-navy/70 backdrop-blur-md flex items-center justify-center z-50 px-4">
-          <div className="bg-white rounded-3xl max-w-md w-full max-h-[90vh] overflow-hidden shadow-[0_20px_50px_rgba(2,27,58,0.15)] border border-gray-100 flex flex-col relative animate-in fade-in zoom-in-95 duration-300">
-            
+      <PortalModal isOpen={!!selectedServiceForDetail} onClose={() => setSelectedServiceForDetail(null)} maxWidth="max-w-md">
+        {selectedServiceForDetail && (
+          <>
             {/* Minimalist Close Button */}
             <button
               onClick={() => setSelectedServiceForDetail(null)}
@@ -915,9 +912,9 @@ export default function Counseling() {
               </div>
 
             </div>
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </PortalModal>
 
     </div>
   );
