@@ -1312,9 +1312,16 @@ export default function Home({ session, sessionLoading }) {
         ) : activeTab === 'Login' ? (
           <Login
             startFlipped={loginStartFlipped}
-            onLoginSuccess={() => {
-              setActiveTab('Home');
-              window.history.pushState(null, '', '#');
+            onLoginSuccess={(sessionData) => {
+              setIsLoggedIn(true);
+              const role = sessionData?.user?.role;
+              if (role === 'admin' || role === 'team_head') {
+                setActiveTab('AdminDashboard');
+                window.location.hash = '#admin';
+              } else {
+                setActiveTab('UserDashboard');
+                window.location.hash = '#dashboard';
+              }
             }}
             onBack={() => {
               setActiveTab('Home');
