@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useBodyScrollLock } from '../../../hooks/useBodyScrollLock';
 import PortalModal from '../../../components/PortalModal';
+import CareerTools from '../CareerTools/CareerTools';
 import {
   User,
   Bookmark,
@@ -334,11 +335,6 @@ export default function UserDashboard({ session, onLogout, onProfileUpdate, save
               <button
                 key={item.id}
                 onClick={() => {
-                  if (item.id === 'Career Tools') {
-                    if (onGoHome) onGoHome();
-                    window.location.hash = '#careertools';
-                    return;
-                  }
                   setActiveSubTab(item.id);
                   setMobileSidebarOpen(false);
                 }}
@@ -1017,6 +1013,13 @@ export default function UserDashboard({ session, onLogout, onProfileUpdate, save
                   </div>
                 ))}
               </div>
+            </div>
+          )}
+
+          {/* VIEW: CAREER TOOLS */}
+          {activeSubTab === 'Career Tools' && !loading && (
+            <div className="space-y-6 animate-fadeIn text-left">
+              <CareerTools />
             </div>
           )}
 
