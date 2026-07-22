@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Home from './pages/ios/Home/Home';
+import Home from './views/ios/Home/Home';
 import FloatingSocials from './components/FloatingSocials';
 const getCurrentSession = async () => null;
 const onAuthChange = (callback) => { if (callback) { /* no-op */ } return { unsubscribe: () => {} }; };
