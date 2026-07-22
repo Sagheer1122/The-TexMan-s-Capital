@@ -1,0 +1,267 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  user
+  admin
+  team_head
+}
+
+enum Level {
+  PRC
+  CAF
+  CFAP
+  MSA
+  ACCA
+  Qualified
+}
+
+enum JobType {
+  Articleship
+  Internship
+  Full_time
+  Contract
+}
+
+enum ResourceCategory {
+  PRC
+  CAF
+  Training_Induction
+  CFAP_SCS_Finals
+  CA_Qualified
+  ACCA
+}
+
+enum ResourceType {
+  PDF
+  DOCX
+  ZIP
+  XLSX
+  LINK
+}
+
+enum MessageStatus {
+  Pending
+  Replied
+  Closed
+}
+
+enum RequestStatus {
+  Pending
+  Fulfilled
+  Rejected
+}
+
+enum EventStatus {
+  Upcoming
+  Live
+  Recorded
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  username      String   @unique
+  passwordHash  String   @map("password_hash")
+  fullName      String   @map("full_name")
+  role          Role     @default(user)
+  avatarUrl     String?  @map("avatar_url")
+  level         Level    @default(CAF)
+  phone         String?
+  city          String?
+  institution   String?
+  papersCleared Int      @default(0) @map("papers_cleared")
+  cvUrl         String?  @map("cv_url")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  savedJobs          JobBookmark[]
+  messages           CounselingQuery[]
+  resourceRequests   ResourceRequest[]
+  eventRegistrations EventRegistration[]
+  postedJobs         Job[]               @relation("PostedJobs")
+
+  @@map("users")
+}
+
+model Job {
+  id           String    @id @default(uuid())
+  title        String
+  company      String
+  location     String
+  level        String
+  jobType      JobType   @map("job_type")
+  isOverseas   Boolean   @default(false) @map("is_overseas")
+  deadline     DateTime?
+  description  String    @db.Text
+  requirements String[]
+  postedById   String    @map("posted_by")
+  postedBy     User      @relation("PostedJobs", fields: [postedById], references: [id], onDelete: Cascade)
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  bookmarkedBy JobBookmark[]
+
+  @@index([location])
+  @@index([jobType])
+  @@index([isOverseas])
+  @@map("jobs")
+}
+
+model JobBookmark {
+  userId    String   @map("user_id")
+  jobId     String   @map("job_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  job  Job  @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@id([userId, jobId])
+  @@map("job_bookmarks")
+}
+
+model Resource {
+  id          String           @id @default(uuid())
+  title       String
+  description String           @db.Text
+  category    ResourceCategory
+  type        ResourceType
+  downloads   Int              @default(0)
+  tag         String?
+  tagColor    String?          @map("tag_color")
+  btnColor    String?          @map("btn_color")
+  downloadUrl String           @map("download_url")
+  isFeatured  Boolean          @default(false) @map("is_featured")
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+
+  @@index([category])
+  @@map("resources")
+}
+
+model Announcement {
+  id        String   @id @default(uuid())
+  title     String
+  summary   String   @db.Text
+  content   String   @db.Text
+  category  String   @default("General")
+  eventDate String?  @map("event_date")
+  isPinned  Boolean  @default(false) @map("is_pinned")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("announcements")
+}
+
+model Event {
+  id           String      @id @default(uuid())
+  title        String
+  desc         String      @db.Text
+  date         String
+  time         String
+  speakerName  String?     @map("speaker_name")
+  speakerTitle String?     @map("speaker_title")
+  speakerOrg   String?     @map("speaker_org")
+  speakerRole  String?     @map("speaker_role")
+  status       EventStatus @default(Upcoming)
+  qualTarget   String?     @map("qual_target")
+  location     String
+  meetingLink  String?     @map("meeting_link")
+  recordingUrl String?     @map("recording_url")
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+
+  registrations EventRegistration[]
+
+  @@map("events")
+}
+
+model EventRegistration {
+  userId    String   @map("user_id")
+  eventId   String   @map("event_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@id([userId, eventId])
+  @@map("event_registrations")
+}
+
+model CounselingQuery {
+  id        String        @id @default(uuid())
+  userId    String?       @map("user_id")
+  name      String
+  email     String
+  phone     String?
+  subject   String?
+  category  String        @default("General Inquiry")
+  message   String        @db.Text
+  status    MessageStatus @default(Pending)
+  replyText String?       @map("reply_text") @db.Text
+  repliedBy String?       @map("replied_by")
+  repliedAt DateTime?     @map("replied_at")
+  createdAt DateTime      @default(now()) @map("created_at")
+  updatedAt DateTime      @updatedAt @map("updated_at")
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("counseling_queries")
+}
+
+model ResourceRequest {
+  id            String        @id @default(uuid())
+  userId        String?       @map("user_id")
+  name          String
+  email         String
+  resourceTitle String        @map("resource_title")
+  category      String?
+  notes         String?       @db.Text
+  status        RequestStatus @default(Pending)
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("resource_requests")
+}
+
+model CommunityGroup {
+  id               String   @id @default(uuid())
+  title            String
+  categoryKey      String   @map("category_key")
+  badge            String
+  badgeBg          String   @map("badge_bg")
+  description      String   @db.Text
+  membersCountText String   @map("members_count_text")
+  bullets          String[]
+  whatsappLink     String   @map("whatsapp_link")
+  discordLink      String   @map("discord_link")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  @@map("community_groups")
+}
+
+model Podcast {
+  id         String   @id @default(uuid())
+  title      String
+  guest      String?
+  duration   String?
+  views      String   @default("0")
+  youtubeId  String   @map("youtube_id")
+  youtubeUrl String?  @map("youtube_url")
+  qualTag    String?  @map("qual_tag")
+  typeTag    String?  @map("type_tag")
+  likesCount Int      @default(0) @map("likes_count")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("podcasts")
+}

@@ -1,27 +1,60 @@
-export const getCurrentSession = async () => null;
+export const getCurrentSession = async () => {
+  try {
+    const res = await fetch('/api/auth/me');
+    const data = await res.json();
+    if (data.user) {
+      return { user: { id: data.user.id, email: data.user.email, user_metadata: { username: data.user.username, full_name: data.user.fullName } } };
+    }
+    return null;
+  } catch (err) {
+    return null;
+  }
+};
 
 export const onAuthChange = (callback) => {
-  if (callback) { /* no-op */ }
   return { unsubscribe: () => {} };
 };
 
-export const getProfiles = async () => [];
+export const getProfiles = async () => {
+  try {
+    const res = await fetch('/api/auth/me');
+    const data = await res.json();
+    if (data.user) {
+      return [{ id: data.user.id, email: data.user.email, full_name: data.user.fullName, username: data.user.username, role: data.user.role, avatar_url: data.user.avatarUrl, level: data.user.level }];
+    }
+    return [];
+  } catch (err) {
+    return [];
+  }
+};
 
 export const logoutUser = async () => {
+  await fetch('/api/auth/logout', { method: 'POST' });
   window.location.reload();
 };
 
 export const loginUser = async (email, password) => {
-  if (password) { /* no-op */ }
-  await new Promise(r => setTimeout(r, 1000));
-  if (email.includes('admin')) {
-    return { user: { id: '1', email, full_name: 'Saboor Noor', role: 'admin' } };
+  const res = await fetch('/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || 'Login failed');
   }
-  return { user: { id: '2', email, full_name: 'Student User', role: 'user' } };
+  return { user: { id: data.user.id, email: data.user.email, role: data.user.role, full_name: data.user.fullName } };
 };
 
 export const registerUser = async (email, password, username, full_name) => {
-  if (password) { /* no-op */ }
-  await new Promise(r => setTimeout(r, 1000));
-  return { user: { id: '2', email, full_name, username, role: 'user' } };
+  const res = await fetch('/api/auth/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password, username, fullName: full_name }),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || 'Registration failed');
+  }
+  return { user: { id: data.user.id, email: data.user.email, role: data.user.role, full_name: data.user.fullName, username: data.user.username } };
 };
